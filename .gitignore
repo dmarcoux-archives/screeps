@@ -78,3 +78,10 @@ tests/baselines/reference/dt
 .failed-tests
 TEST-results.xml
 package-lock.json
+
+# Screeps config
+screeps.json
+
+# Generated files
+dist/
+.rpt2_cache/

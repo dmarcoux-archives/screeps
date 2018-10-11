@@ -20,6 +20,4 @@ layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/%2Blang/typescri
 
 #### TODOs
 
-- Use
-  [screeps-typescript-starter](https://github.com/screepers/screeps-typescript-starter)
 - Use [typed-screeps](https://github.com/screepers/typed-screeps)
