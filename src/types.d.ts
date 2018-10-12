@@ -1,20 +1,17 @@
-// example declaration file - remove these and add your own custom typings
-
-// memory extension samples
 interface CreepMemory {
-  role: string;
+  role: CreepRole;
   room: string;
   working: boolean;
 }
 
+declare enum CreepRole {
+  None,
+  Harvester,
+  Upgrader
+}
+
+// TODO: Is it needed?
 interface Memory {
   uuid: number;
   log: any;
-}
-
-// `global` extension samples
-declare namespace NodeJS {
-  interface Global {
-    log: any;
-  }
 }
