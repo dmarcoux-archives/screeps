@@ -18,12 +18,13 @@ export class Spawner {
   public spawnCreeps() {
     for (const [role, limit] of Roles) {
       console.log(`Role ${CreepRole[role]} - Current: ${this.currentCreeps.get(role)!} - Limit: ${limit}`);
-      // TODO: Loop to spawn multiple creeps (if possible)
       if (this.currentCreeps.get(role)! < limit) {
-        const creepMemory: CreepMemory = { room: this.room, role, working: false };
+        const creepBody: BodyPartConstant[] = [WORK, WORK, CARRY, MOVE];
+        const creepName: string = `${CreepRole[role]}-${Game.time}`;
+        const options: object = { memory: { room: this.room, role, working: false } };
         // TODO: Check if it errored (missing energy or whatever happens)
         // TODO: Don't hardcode body parts
-        Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, creepMemory);
+        Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options);
         console.log(`${this.room} spawning ${CreepRole[role]}`);
       }
     }
