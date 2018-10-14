@@ -32,7 +32,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // Make creeps work
   for (const creepName in Game.creeps) {
     const creep: Creep = Game.creeps[creepName];
-    console.log(`${creepName} is ${CreepRole[creep.memory.role]}`);
 
     // TODO: Improve this
     switch(creep.memory.role.valueOf()) {

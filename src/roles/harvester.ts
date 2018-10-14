@@ -1,3 +1,5 @@
+import { CreepRole } from 'globals';
+
 // Creeps with the harvester role
 export class Harvester {
   private self: Creep;
@@ -8,29 +10,23 @@ export class Harvester {
 
   public work() {
     if (this.self.memory.working) {
-      console.log(`${this.self.name} is working`);
-
       if (this.self.carry.energy === 0) {
-        console.log(`${this.self.name} energy empty`);
         this.self.memory.working = false;
       } else {
         if (this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} is moving to spawn`);
+          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Spawn`);
           this.self.moveTo(Game.spawns.Spawn1);
         }
       }
     }
     else {
-      console.log(`${this.self.name} is not working`);
-
       if (this.self.carry.energy === this.self.carryCapacity) {
-        console.log(`${this.self.name} energy full`);
         this.self.memory.working = true;
       } else {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} is moving to source`);
+          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Source`);
           this.self.moveTo(source.pos);
         }
       }
