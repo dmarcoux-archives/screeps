@@ -1,4 +1,5 @@
 import { CreepRole } from 'globals';
+import { Builder } from 'roles/builder';
 import { Harvester } from 'roles/harvester';
 import { Upgrader } from 'roles/upgrader';
 import { Spawner } from 'spawner';
@@ -42,6 +43,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
       case CreepRole.Upgrader.valueOf():
         const upgrader: Upgrader = new Upgrader(creep);
         upgrader.work();
+        break;
+      case CreepRole.Builder.valueOf():
+        const builder: Builder = new Builder(creep);
+        builder.work();
         break;
     }
   }
