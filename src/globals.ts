@@ -5,4 +5,4 @@ export enum CreepRole {
 }
 
 // TODO: Could the Map be a type?
-export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([[CreepRole.Harvester, 2], [CreepRole.Upgrader, 2]]);
+export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([[CreepRole.Harvester, 5], [CreepRole.Upgrader, 5]]);

@@ -18,6 +18,7 @@ export class Spawner {
   public spawnCreeps() {
     for (const [role, limit] of Roles) {
       console.log(`Role ${CreepRole[role]} - Current: ${this.currentCreeps.get(role)!} - Limit: ${limit}`);
+      // TODO: Loop to spawn multiple creeps (if possible)
       if (this.currentCreeps.get(role)! < limit) {
         const creepMemory: CreepMemory = { room: this.room, role, working: false };
         // TODO: Check if it errored (missing energy or whatever happens)
