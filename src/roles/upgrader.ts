@@ -7,27 +7,43 @@ export class Upgrader {
   }
 
   public work() {
+    // TODO: Better naming for the different states (working is just too generic for all creeps)
     if (this.self.memory.working) {
-      if (this.self.carry.energy === 0) {
-        this.self.memory.working = false;
-      } else {
-        if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
-          if (this.self.moveTo(this.self.room.controller.pos) === OK) {
-            console.log(`${this.self.name} => Controller`);
-          }
+      if (this.self.room.controller) {
+        switch(this.self.upgradeController(this.self.room.controller)) {
+          case ERR_NOT_ENOUGH_RESOURCES:
+            this.self.memory.working = false;
+            break;
+          case ERR_NOT_IN_RANGE:
+            if (this.self.moveTo(this.self.room.controller.pos) === OK) {
+              console.log(`${this.self.name} => Controller`);
+            }
+            break;
         }
       }
     }
     else {
-      if (this.self.carry.energy === this.self.carryCapacity) {
-        this.self.memory.working = true;
-      } else {
-        const source = this.self.pos.findClosestByPath(FIND_SOURCES);
-
-        if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          if (this.self.moveTo(source.pos) === OK) {
-            console.log(`${this.self.name} => Source`);
-          }
+      // TODO: Cache this in memory
+      // TODO: Assign creep to a source, so it doesn't go back and forth between sources
+      let energy: Resource<ResourceConstant> | null;
+      energy = this.self.pos.findClosestByPath(
+        FIND_DROPPED_RESOURCES,
+        {
+          filter: (resource) => resource.resourceType === RESOURCE_ENERGY && resource.amount >= this.self.carryCapacity
+        }
+      );
+      if (energy) {
+        switch (this.self.pickup(energy)) {
+          // case OK:
+          //   break;
+          case ERR_FULL:
+            this.self.memory.working = true;
+            break;
+          case ERR_NOT_IN_RANGE:
+            if (this.self.moveTo(energy.pos) === OK) {
+              console.log(`${this.self.name} => Energy`);
+            }
+            break;
         }
       }
     }

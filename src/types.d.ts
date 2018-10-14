@@ -1,6 +1,7 @@
 interface CreepMemory {
   role: number;
   room: string;
+  sourceId: string;
   working: boolean;
 }
 

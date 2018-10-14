@@ -13,6 +13,7 @@ export class Spawner {
   public spawnCreeps() {
     let message: string = 'Roles (Current/Target)';
 
+    // TODO: Add priority for screeps to spawn depending on which screeps are alive
     for (const [role, targetNumber] of Roles) {
       // TODO: Is there a better way to compare the enums beside having to do `.valueOf()`
       const currentNumber: number = _.filter(Game.creeps, (creep) => creep.memory.role.valueOf() === role.valueOf()).length;

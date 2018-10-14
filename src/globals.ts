@@ -7,15 +7,15 @@ export enum CreepRole {
 
 // TODO: Could the Map be a type?
 export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([
-  [CreepRole.Harvester, 5],
+  [CreepRole.Harvester, 2],
   [CreepRole.Upgrader,  5],
-  [CreepRole.Builder,   1],
-  [CreepRole.Repairer,  1]
+  [CreepRole.Builder,   8],
+  [CreepRole.Repairer,  2]
 ]);
 
 // TODO: Could the Map be a type?
 export const RoleBodies: Map<CreepRole, BodyPartConstant[]> = new Map<CreepRole, BodyPartConstant[]>([
-  [CreepRole.Harvester, [WORK, WORK, CARRY, MOVE]],
+  [CreepRole.Harvester, [WORK, WORK, MOVE]],
   [CreepRole.Upgrader,  [WORK, WORK, CARRY, MOVE]],
   [CreepRole.Builder,   [WORK, WORK, CARRY, MOVE]],
   [CreepRole.Repairer,  [WORK, WORK, CARRY, MOVE]],

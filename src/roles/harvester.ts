@@ -8,28 +8,25 @@ export class Harvester {
   }
 
   public work() {
-    if (this.self.memory.working) {
-      if (this.self.carry.energy === 0) {
-        this.self.memory.working = false;
-      } else {
-        if (this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          if (this.self.moveTo(Game.spawns.Spawn1) === OK) {
-            console.log(`${this.self.name} => Spawn`);
-          }
-        }
-      }
+    let source: Source | null;
+    if (this.self.memory.sourceId) {
+      source = Game.getObjectById(this.self.memory.sourceId);
     }
     else {
-      if (this.self.carry.energy === this.self.carryCapacity) {
-        this.self.memory.working = true;
-      } else {
-        const source = this.self.pos.findClosestByPath(FIND_SOURCES);
+      source = this.self.pos.findClosestByPath(FIND_SOURCES);
+    }
 
-        if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
+    if (source) {
+      switch (this.self.harvest(source)) {
+        // TODO: Is this needed?
+        // case OK:
+        //   this.self.memory.working = true;
+        //   break;
+        case ERR_NOT_IN_RANGE:
           if (this.self.moveTo(source.pos) === OK) {
             console.log(`${this.self.name} => Source`);
           }
-        }
+          break;
       }
     }
   }
