@@ -7,7 +7,7 @@ import { ErrorMapper } from 'utils/ErrorMapper';
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
-  // console.log(`Current game tick is ${Game.time}`);
+  console.log(`Current game tick is ${Game.time}`);
 
   // TODO: Store expansive operations (Game.creeps ???, etc...)
 
@@ -32,7 +32,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // Make creeps work
   for (const creepName in Game.creeps) {
     const creep: Creep = Game.creeps[creepName];
-    console.log(creepName + ' is ' + CreepRole[creep.memory.role]);
+    console.log(`${creepName} is ${CreepRole[creep.memory.role]}`);
 
     // TODO: Improve this
     switch(creep.memory.role.valueOf()) {

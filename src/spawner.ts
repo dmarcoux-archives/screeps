@@ -22,7 +22,7 @@ export class Spawner {
         // TODO: Check if it errored (missing energy or whatever happens)
         // TODO: Don't hardcode body parts
         Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, MOVE], undefined, creepMemory);
-        console.log(this.room + ' SPAWNING ' + CreepRole[role]);
+        console.log(`${this.room} spawning ${CreepRole[role]}`);
       }
     });
   }

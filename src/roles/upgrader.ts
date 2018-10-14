@@ -8,31 +8,29 @@ export class Upgrader {
 
   public work() {
     if (this.self.memory.working) {
-      console.log(this.self.name + ' WORKING');
+      console.log(`${this.self.name} is working`);
 
       if (this.self.carry.energy === 0) {
-        console.log(this.self.name + ' ENERGY EMPTY');
-
+        console.log(`${this.self.name} energy empty`);
         this.self.memory.working = false;
       } else {
         if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
-          console.log(this.self.name + ' MOVING TO CONTROLLER');
+          console.log(`${this.self.name} is moving to controller`);
           this.self.moveTo(this.self.room.controller.pos);
         }
       }
     }
     else {
-      console.log(this.self.name + ' NOT WORKING');
+      console.log(`${this.self.name} is not working`);
 
       if (this.self.carry.energy === this.self.carryCapacity) {
-        console.log(this.self.name + ' ENERGY FULL');
-
+        console.log(`${this.self.name} energy full`);
         this.self.memory.working = true;
       } else {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(this.self.name + ' MOVING TO SOURCE');
+          console.log(`${this.self.name} is moving to source`);
           this.self.moveTo(source.pos);
         }
       }
