@@ -1,5 +1,4 @@
 export enum CreepRole {
-  None,
   Harvester,
   Upgrader,
   Builder,
