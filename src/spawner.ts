@@ -11,10 +11,12 @@ export class Spawner {
   }
 
   public spawnCreeps() {
+    let message: string = 'Roles (Current/Target)';
+
     for (const [role, targetNumber] of Roles) {
       // TODO: Is there a better way to compare the enums beside having to do `.valueOf()`
       const currentNumber: number = _.filter(Game.creeps, (creep) => creep.memory.role.valueOf() === role.valueOf()).length;
-      console.log(`Role ${CreepRole[role]} - Current: ${currentNumber} - Target: ${targetNumber}`);
+      message += ` | ${CreepRole[role]}: ${currentNumber}/${targetNumber}`;
 
       if (currentNumber < targetNumber) {
         const creepBody: BodyPartConstant[] = RoleBodies.get(role)!;
@@ -26,5 +28,7 @@ export class Spawner {
         }
       }
     }
+
+    console.log(message);
   }
 }
