@@ -1,5 +1,3 @@
-import { CreepRole } from 'globals';
-
 // Creeps with the harvester role
 export class Harvester {
   private self: Creep;

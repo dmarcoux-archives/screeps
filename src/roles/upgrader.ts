@@ -1,5 +1,3 @@
-import { CreepRole } from 'globals';
-
 // Creeps with the upgrader role
 export class Upgrader {
   private self: Creep;
