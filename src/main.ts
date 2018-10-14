@@ -34,25 +34,26 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // Make creeps work
   for (const creepName in Game.creeps) {
     const creep: Creep = Game.creeps[creepName];
+    let creepWithRole;
 
     // TODO: Improve this
     switch(creep.memory.role.valueOf()) {
       case CreepRole.Harvester.valueOf():
-        const harvester: Harvester = new Harvester(creep);
-        harvester.work();
+        creepWithRole = new Harvester(creep);
         break;
       case CreepRole.Upgrader.valueOf():
-        const upgrader: Upgrader = new Upgrader(creep);
-        upgrader.work();
+        creepWithRole = new Upgrader(creep);
         break;
       case CreepRole.Builder.valueOf():
-        const builder: Builder = new Builder(creep);
-        builder.work();
+        creepWithRole = new Builder(creep);
         break;
       case CreepRole.Repairer.valueOf():
-        const repairer: Repairer = new Repairer(creep);
-        repairer.work();
+        creepWithRole = new Repairer(creep);
         break;
+    }
+
+    if (creepWithRole) {
+      creepWithRole.work();
     }
   }
 });
