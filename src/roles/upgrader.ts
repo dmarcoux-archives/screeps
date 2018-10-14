@@ -14,7 +14,7 @@ export class Upgrader {
         this.self.memory.working = false;
       } else {
         if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Controller`);
+          console.log(`${this.self.name} => Controller`);
           this.self.moveTo(this.self.room.controller.pos);
         }
       }
@@ -26,7 +26,7 @@ export class Upgrader {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Source`);
+          console.log(`${this.self.name} => Source`);
           this.self.moveTo(source.pos);
         }
       }

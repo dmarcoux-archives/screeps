@@ -14,7 +14,7 @@ export class Harvester {
         this.self.memory.working = false;
       } else {
         if (this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Spawn`);
+          console.log(`${this.self.name} => Spawn`);
           this.self.moveTo(Game.spawns.Spawn1);
         }
       }
@@ -26,7 +26,7 @@ export class Harvester {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name}: ${CreepRole[this.self.memory.role]} => Source`);
+          console.log(`${this.self.name} => Source`);
           this.self.moveTo(source.pos);
         }
       }
