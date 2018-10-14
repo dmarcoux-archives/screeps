@@ -1,4 +1,4 @@
-import { CreepRole, Roles } from 'globals';
+import { CreepRole, RoleBodies, Roles } from 'globals';
 
 // TODO: Spawn creep on demand just in time for a creep which will die (check creep.ticksToLive)
 
@@ -17,10 +17,10 @@ export class Spawner {
       console.log(`Role ${CreepRole[role]} - Current: ${currentNumber} - Target: ${targetNumber}`);
 
       if (currentNumber < targetNumber) {
-        const creepBody: BodyPartConstant[] = [WORK, WORK, CARRY, MOVE];
+        const creepBody: BodyPartConstant[] = RoleBodies.get(role)!;
         const creepName: string = `${CreepRole[role]}-${Game.time}`;
         const options: object = { memory: { room: this.room, role, working: false } };
-        // TODO: Don't hardcode body parts
+
         if (Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options) === OK) {
           console.log(`${this.room} spawning ${CreepRole[role]}`);
         }
