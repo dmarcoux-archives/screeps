@@ -1,4 +1,8 @@
 // Creeps with the builder role
+// TODO: Build roads between sources and spawn
+// TODO: Build roads between sources and room controller
+// TODO: Build walls/ramparts
+// TODO: Build towers
 export class Builder {
   private self: Creep;
 
