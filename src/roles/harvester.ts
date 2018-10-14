@@ -12,8 +12,9 @@ export class Harvester {
         this.self.memory.working = false;
       } else {
         if (this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Spawn`);
-          this.self.moveTo(Game.spawns.Spawn1);
+          if (this.self.moveTo(Game.spawns.Spawn1) === OK) {
+            console.log(`${this.self.name} => Spawn`);
+          }
         }
       }
     }
@@ -24,8 +25,9 @@ export class Harvester {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Source`);
-          this.self.moveTo(source.pos);
+          if (this.self.moveTo(source.pos) === OK) {
+            console.log(`${this.self.name} => Source`);
+          }
         }
       }
     }

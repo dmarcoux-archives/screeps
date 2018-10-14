@@ -18,14 +18,16 @@ export class Builder {
         const constructionSite = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
         if (constructionSite && this.self.build(constructionSite) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Construction Site`);
-          this.self.moveTo(constructionSite.pos);
+          if (this.self.moveTo(constructionSite.pos) === OK) {
+            console.log(`${this.self.name} => Construction Site`);
+          }
         }
         // TODO: DRY this (duplicated code from upgrader)
         // Act as an upgrader if there is nothing to build
         else if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
+          if (this.self.moveTo(this.self.room.controller.pos) === OK) {
             console.log(`${this.self.name} => Controller`);
-            this.self.moveTo(this.self.room.controller.pos);
+          }
         }
       }
     }
@@ -36,8 +38,9 @@ export class Builder {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Source`);
-          this.self.moveTo(source.pos);
+          if (this.self.moveTo(source.pos) === OK) {
+            console.log(`${this.self.name} => Source`);
+          }
         }
       }
     }

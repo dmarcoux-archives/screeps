@@ -20,10 +20,10 @@ export class Spawner {
         const creepBody: BodyPartConstant[] = [WORK, WORK, CARRY, MOVE];
         const creepName: string = `${CreepRole[role]}-${Game.time}`;
         const options: object = { memory: { room: this.room, role, working: false } };
-        // TODO: Check if it errored (missing energy or whatever happens)
         // TODO: Don't hardcode body parts
-        Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options);
-        console.log(`${this.room} spawning ${CreepRole[role]}`);
+        if (Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options) === OK) {
+          console.log(`${this.room} spawning ${CreepRole[role]}`);
+        }
       }
     }
   }

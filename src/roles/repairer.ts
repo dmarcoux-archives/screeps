@@ -19,8 +19,9 @@ export class Repairer {
         );
 
         if (repairSite && this.self.repair(repairSite) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Repair Site`);
-          this.self.moveTo(repairSite.pos);
+          if (this.self.moveTo(repairSite.pos) === OK) {
+            console.log(`${this.self.name} => Repair Site`);
+          }
         }
         else {
           // TODO: DRY this (duplicated code from builder)
@@ -28,8 +29,9 @@ export class Repairer {
           const constructionSite = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
           if (constructionSite && this.self.build(constructionSite) === ERR_NOT_IN_RANGE) {
-            console.log(`${this.self.name} => Construction Site`);
-            this.self.moveTo(constructionSite.pos);
+            if (this.self.moveTo(constructionSite.pos) === OK) {
+              console.log(`${this.self.name} => Construction Site`);
+            }
           }
         }
       }
@@ -41,8 +43,9 @@ export class Repairer {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Source`);
-          this.self.moveTo(source.pos);
+          if (this.self.moveTo(source.pos) === OK) {
+            console.log(`${this.self.name} => Source`);
+          }
         }
       }
     }

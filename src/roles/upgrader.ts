@@ -12,8 +12,9 @@ export class Upgrader {
         this.self.memory.working = false;
       } else {
         if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Controller`);
-          this.self.moveTo(this.self.room.controller.pos);
+          if (this.self.moveTo(this.self.room.controller.pos) === OK) {
+            console.log(`${this.self.name} => Controller`);
+          }
         }
       }
     }
@@ -24,8 +25,9 @@ export class Upgrader {
         const source = this.self.pos.findClosestByPath(FIND_SOURCES);
 
         if (source && this.self.harvest(source) === ERR_NOT_IN_RANGE) {
-          console.log(`${this.self.name} => Source`);
-          this.self.moveTo(source.pos);
+          if (this.self.moveTo(source.pos) === OK) {
+            console.log(`${this.self.name} => Source`);
+          }
         }
       }
     }
