@@ -17,6 +17,8 @@ export class Builder {
           console.log(`${this.self.name} => Construction Site`);
           this.self.moveTo(constructionSite.pos);
         }
+        // TODO: DRY this (duplicated code from upgrader)
+        // Act as an upgrader if there is nothing to build
         else if (this.self.room.controller && this.self.upgradeController(this.self.room.controller) === ERR_NOT_IN_RANGE) {
             console.log(`${this.self.name} => Controller`);
             this.self.moveTo(this.self.room.controller.pos);
