@@ -36,20 +36,20 @@ export const loop = ErrorMapper.wrapLoop(() => {
     let creepWithRole;
 
     // TODO: Improve this
-    switch(creep.memory.role.valueOf()) {
-      case CreepRole.Harvester.valueOf():
+    switch(creep.memory.role) {
+      case CreepRole.Harvester:
         creepWithRole = new Harvester(creep);
         break;
-      case CreepRole.Upgrader.valueOf():
+      case CreepRole.Upgrader:
         creepWithRole = new Upgrader(creep);
         break;
-      case CreepRole.Builder.valueOf():
+      case CreepRole.Builder:
         creepWithRole = new Builder(creep);
         break;
-      case CreepRole.Repairer.valueOf():
+      case CreepRole.Repairer:
         creepWithRole = new Repairer(creep);
         break;
-      case CreepRole.Hauler.valueOf():
+      case CreepRole.Hauler:
         creepWithRole = new Hauler(creep);
         break;
     }

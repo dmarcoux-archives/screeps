@@ -1,9 +1,9 @@
 export enum CreepRole {
-  Harvester,
-  Upgrader,
-  Builder,
-  Repairer,
-  Hauler
+  Harvester = 'Harvester',
+  Upgrader = 'Upgrader',
+  Builder = 'Builder',
+  Repairer = 'Repairer',
+  Hauler = 'Hauler'
 }
 
 // TODO: Could the Map be a type?
