@@ -26,29 +26,14 @@ export class Builder {
             break;
         }
       }
-      else {
-        // TODO: The code beside the `case ERR_FULL` should be the hauler role and it needs to be refactored to not hardcode the spawn
-        switch(this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY)) {
-          case ERR_FULL:
-            if (this.self.room.controller) {
-              switch(this.self.upgradeController(this.self.room.controller)) {
-                case ERR_NOT_ENOUGH_RESOURCES:
-                  this.self.memory.working = false;
-                  break;
-                case ERR_NOT_IN_RANGE:
-                  if (this.self.moveTo(this.self.room.controller.pos) === OK) {
-                    console.log(`${this.self.name} => Controller`);
-                  }
-                  break;
-              }
-            }
-            break;
+      else if (this.self.room.controller) {
+        switch(this.self.upgradeController(this.self.room.controller)) {
           case ERR_NOT_ENOUGH_RESOURCES:
             this.self.memory.working = false;
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.self.moveTo(Game.spawns.Spawn1) === OK) {
-              console.log(`${this.self.name} => Spawn`);
+            if (this.self.moveTo(this.self.room.controller.pos) === OK) {
+              console.log(`${this.self.name} => Controller`);
             }
             break;
         }
