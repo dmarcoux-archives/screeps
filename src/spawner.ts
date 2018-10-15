@@ -11,6 +11,12 @@ export class Spawner {
   }
 
   public spawnCreeps() {
+    // TODO: Improve this. If spawn is busy, put (Game.time + wait) in memory to not run code for nothing
+    const spawning: Spawning | null = Game.spawns.Spawn1.spawning;
+    if (spawning) {
+      return;
+    }
+
     let message: string = 'Roles (Current/Target)';
 
     // TODO: Add priority for screeps to spawn depending on which screeps are alive
