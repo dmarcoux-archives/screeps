@@ -26,14 +26,9 @@ export class Upgrader {
     }
     else {
       // TODO: Cache this in memory
-      // TODO: Assign creep to a source, so it doesn't go back and forth between sources
-      let energy: Resource<ResourceConstant> | null;
-      energy = this.self.pos.findClosestByPath(
-        FIND_DROPPED_RESOURCES,
-        {
-          filter: (resource) => resource.resourceType === RESOURCE_ENERGY && resource.amount >= this.self.carryCapacity
-        }
-      );
+      // TODO: Instead of RoomPosition.findInRange (medium CPU cost), use Room.lookForAtArea (low CPU cost)
+      const energy: Resource<ResourceConstant> | null = _.max(Game.spawns.Spawn1.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
+
       if (energy) {
         switch (this.self.pickup(energy)) {
           // case OK:

@@ -13,7 +13,8 @@ export class Hauler {
       // TODO: Don't hardcode the spawn
       switch(this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY)) {
         case ERR_FULL:
-          // TODO: Transfer to container or storage
+          // TODO: Transfer to container or storage if available
+          this.self.drop(RESOURCE_ENERGY);
           break;
         case ERR_NOT_ENOUGH_RESOURCES:
           this.self.memory.working = false;
@@ -28,13 +29,13 @@ export class Hauler {
     else {
       // TODO: Cache this in memory
       // TODO: Assign creep to a source, so it doesn't go back and forth between sources
-      let energy: Resource<ResourceConstant> | null;
-      energy = this.self.pos.findClosestByPath(
+      const energy: Resource<ResourceConstant> | null = this.self.pos.findClosestByPath(
         FIND_DROPPED_RESOURCES,
         {
           filter: (resource) => resource.resourceType === RESOURCE_ENERGY
         }
       );
+
       if (energy) {
         switch (this.self.pickup(energy)) {
           case OK:
