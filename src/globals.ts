@@ -23,3 +23,8 @@ export const RoleBodies: Map<CreepRole, BodyPartConstant[]> = new Map<CreepRole,
   [CreepRole.Repairer,  [WORK, WORK, CARRY, MOVE]],
   [CreepRole.Hauler,    [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]],
 ]);
+
+// Prefix message with Game.time
+export function logMessage(message: string){
+  console.log(`${Game.time} | ${message}`);
+}

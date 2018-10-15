@@ -1,3 +1,5 @@
+import { logMessage } from 'globals';
+
 // Creeps with the harvester role
 // TODO: - They drop the energy on the ground (room controller level 1) or in a container (room controller level 2+)
 export class Harvester {
@@ -24,7 +26,7 @@ export class Harvester {
         //   break;
         case ERR_NOT_IN_RANGE:
           if (this.self.moveTo(source.pos) === OK) {
-            console.log(`${this.self.name} => Source`);
+            logMessage(`${this.self.name} => Source`);
           }
           break;
       }

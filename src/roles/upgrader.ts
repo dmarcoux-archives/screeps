@@ -1,3 +1,5 @@
+import { logMessage } from 'globals';
+
 // Creeps with the upgrader role
 export class Upgrader {
   private self: Creep;
@@ -16,7 +18,7 @@ export class Upgrader {
             break;
           case ERR_NOT_IN_RANGE:
             if (this.self.moveTo(this.self.room.controller.pos) === OK) {
-              console.log(`${this.self.name} => Controller`);
+              logMessage(`${this.self.name} => Controller`);
             }
             break;
         }
@@ -41,7 +43,7 @@ export class Upgrader {
             break;
           case ERR_NOT_IN_RANGE:
             if (this.self.moveTo(energy.pos) === OK) {
-              console.log(`${this.self.name} => Energy`);
+              logMessage(`${this.self.name} => Energy`);
             }
             break;
         }

@@ -1,4 +1,4 @@
-import { CreepRole, RoleBodies, Roles } from 'globals';
+import { CreepRole, logMessage, RoleBodies, Roles } from 'globals';
 
 // TODO: Spawn creep on demand just in time for a creep which will die (check creep.ticksToLive)
 
@@ -25,11 +25,11 @@ export class Spawner {
         const options: object = { memory: { room: this.room, role, working: false } };
 
         if (Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options) === OK) {
-          console.log(`${this.room} spawning ${CreepRole[role]}`);
+          logMessage(`${this.room} spawning ${CreepRole[role]}`);
         }
       }
     }
 
-    console.log(message);
+    logMessage(message);
   }
 }

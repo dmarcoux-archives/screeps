@@ -1,3 +1,5 @@
+import { logMessage } from 'globals';
+
 // Creeps with the repairer role
 export class Repairer {
   private self: Creep;
@@ -22,7 +24,7 @@ export class Repairer {
             break;
           case ERR_NOT_IN_RANGE:
             if (this.self.moveTo(repairSite.pos) === OK) {
-              console.log(`${this.self.name} => Repair Site`);
+              logMessage(`${this.self.name} => Repair Site`);
             }
             break;
         }
@@ -39,7 +41,7 @@ export class Repairer {
               break;
             case ERR_NOT_IN_RANGE:
               if (this.self.moveTo(constructionSite.pos) === OK) {
-                console.log(`${this.self.name} => Construction Site`);
+                logMessage(`${this.self.name} => Construction Site`);
               }
               break;
           }
@@ -65,7 +67,7 @@ export class Repairer {
             break;
           case ERR_NOT_IN_RANGE:
             if (this.self.moveTo(energy.pos) === OK) {
-              console.log(`${this.self.name} => Energy`);
+              logMessage(`${this.self.name} => Energy`);
             }
             break;
         }

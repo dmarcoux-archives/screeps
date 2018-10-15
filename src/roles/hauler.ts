@@ -1,3 +1,5 @@
+import { logMessage } from 'globals';
+
 // Creeps with the hauler role
 export class Hauler {
   private self: Creep;
@@ -18,7 +20,7 @@ export class Hauler {
           break;
         case ERR_NOT_IN_RANGE:
           if (this.self.moveTo(Game.spawns.Spawn1) === OK) {
-            console.log(`${this.self.name} => Spawn`);
+            logMessage(`${this.self.name} => Spawn`);
           }
           break;
       }
@@ -45,7 +47,7 @@ export class Hauler {
             break;
           case ERR_NOT_IN_RANGE:
             if (this.self.moveTo(energy.pos) === OK) {
-              console.log(`${this.self.name} => Energy`);
+              logMessage(`${this.self.name} => Energy`);
             }
             break;
         }
