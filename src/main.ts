@@ -25,6 +25,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
   let room: string = '';
   for (const roomName in Game.rooms) {
     room = roomName;
+
+    // Initialize Memory.rooms
+    if (!(Memory.rooms)) {
+      Memory.rooms = {};
+    }
+
+    // Store source ids in memory if it's not already stored for this room
+    // TODO: This needs to be manually deleted in-game to reset (whenever I change the keys)
+    if (!(Memory.rooms[roomName])) {
+      Memory.rooms[roomName] = { sourceIds: Game.rooms[roomName].find(FIND_SOURCES).map((source) => source.id) };
+    }
   }
 
   const spawner: Spawner = new Spawner(room);

@@ -10,3 +10,7 @@ interface Memory {
   uuid: number;
   log: any;
 }
+
+interface RoomMemory {
+  sourceIds: string[];
+}

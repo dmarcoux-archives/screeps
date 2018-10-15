@@ -10,13 +10,16 @@ export class Harvester {
   }
 
   public work() {
-    let source: Source | null;
-    if (this.self.memory.sourceId) {
-      source = Game.getObjectById(this.self.memory.sourceId);
+    // TODO: Could this check be done only once, just after spawning?
+    if (!(this.self.memory.sourceId)) {
+      const busySourceIds: string[] = _.filter(Memory.creeps, (memory) => memory.role === this.self.memory.role && memory.room === this.self.memory.room && memory.sourceId).map((memory) => memory.sourceId);
+      // TODO: Could it be more efficient?
+      const freeSourceIds: string = Memory.rooms[this.self.memory.room].sourceIds.filter((value) => !busySourceIds.includes(value))[0];
+
+      this.self.memory.sourceId = freeSourceIds;
     }
-    else {
-      source = this.self.pos.findClosestByPath(FIND_SOURCES);
-    }
+
+    const source: Source | null = Game.getObjectById(this.self.memory.sourceId);
 
     if (source) {
       switch (this.self.harvest(source)) {
