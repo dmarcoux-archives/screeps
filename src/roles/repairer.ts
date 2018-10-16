@@ -10,7 +10,7 @@ export class Repairer {
 
   public work() {
     if (this.self.memory.working) {
-      const repairSite = this.self.pos.findClosestByPath(
+      const repairSite: Structure | null = this.self.pos.findClosestByPath(
         FIND_STRUCTURES,
         {
           filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL
@@ -32,7 +32,7 @@ export class Repairer {
       else {
         // TODO: DRY this (duplicated code from builder)
         // Act as a builder if there is nothing to repair
-        const constructionSite = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+        const constructionSite: ConstructionSite | null = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
         if (constructionSite) {
           switch(this.self.build(constructionSite)) {

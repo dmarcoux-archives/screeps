@@ -14,7 +14,7 @@ export class Builder {
 
   public work() {
     if (this.self.memory.working) {
-      const constructionSite = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      const constructionSite: ConstructionSite | null = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
       if (constructionSite) {
         switch(this.self.build(constructionSite)) {
