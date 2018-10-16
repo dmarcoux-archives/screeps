@@ -5,7 +5,7 @@ import { Hauler } from 'roles/hauler';
 import { Repairer } from 'roles/repairer';
 import { Supplier } from 'roles/supplier';
 import { Upgrader } from 'roles/upgrader';
-import { Spawner } from 'spawner';
+import { RoomManager } from 'room_manager';
 import { ErrorMapper } from 'utils/ErrorMapper';
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -18,35 +18,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  // TODO: Deal with multiple rooms
-  let room: string = '';
+  const rooms: RoomManager[] = [];
   for (const roomName in Game.rooms) {
-    room = roomName;
-
-    // Initialize Memory.rooms
-    if (!(Memory.rooms)) {
-      Memory.rooms = {};
-    }
-
-    // Store source ids in memory if it's not already stored for this room
-    // TODO: This needs to be manually deleted in-game to reset (whenever I change the keys)
-    if (!(Memory.rooms[roomName])) {
-      Memory.rooms[roomName] = { sourceIds: Game.rooms[roomName].find(FIND_SOURCES).map((source) => source.id) };
-    }
+    rooms.push(new RoomManager(Game.rooms[roomName]));
   }
-
-  // TODO: Store towers.id in memory and retrieve them with Game.getObjectById instead of find
-  const towers: StructureTower[] = Game.rooms[room].find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER });
-  for (const tower of towers) {
-    const target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-
-    if (target) {
-      tower.attack(target);
-    }
-  }
-
-  const spawner: Spawner = new Spawner(room);
-  spawner.spawnCreeps();
 
   // Make creeps work
   for (const creepName in Game.creeps) {
