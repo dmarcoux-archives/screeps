@@ -18,6 +18,7 @@ export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([
   [CreepRole.Supplier,  1]
 ]);
 
+// TODO: Do not hardcore the body parts, but use Room.energyCapacityAvailable to determine what we can spawn and when it can be spawned (when Room.energyAvailable >= body parts cost)
 export const RoleBodies: Map<CreepRole, BodyPartConstant[]> = new Map<CreepRole, BodyPartConstant[]>([
   [CreepRole.Harvester, [WORK, WORK, MOVE]],
   [CreepRole.Upgrader,  [WORK, WORK, CARRY, MOVE]],
