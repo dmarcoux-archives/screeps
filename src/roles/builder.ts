@@ -4,7 +4,8 @@ import { logMessage } from 'globals';
 // TODO: Build roads between sources and spawn
 // TODO: Build roads between sources and room controller
 // TODO: Build walls/ramparts
-// TODO: Build towers
+// TODO: Build towers (one next to spawn, others...???)
+// TODO: Build extensions (next to a road close to the spawn)
 export class Builder {
   private self: Creep;
 
