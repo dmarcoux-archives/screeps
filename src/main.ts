@@ -35,6 +35,16 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  // TODO: Store towers.id in memory and retrieve them with Game.getObjectById instead of find
+  const towers: StructureTower[] = Game.rooms[room].find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER });
+  for (const tower of towers) {
+    const target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+    if (target) {
+      tower.attack(target);
+    }
+  }
+
   const spawner: Spawner = new Spawner(room);
   spawner.spawnCreeps();
 
