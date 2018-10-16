@@ -10,7 +10,7 @@ export enum CreepRole {
 // TODO: Could the Map be a type?
 export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([
   [CreepRole.Harvester, 2],
-  [CreepRole.Upgrader,  6],
+  [CreepRole.Upgrader,  2],
   [CreepRole.Builder,   2],
   [CreepRole.Repairer,  2],
   [CreepRole.Hauler,    2],
