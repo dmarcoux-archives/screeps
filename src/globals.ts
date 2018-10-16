@@ -3,7 +3,8 @@ export enum CreepRole {
   Upgrader = 'Upgrader',
   Builder = 'Builder',
   Repairer = 'Repairer',
-  Hauler = 'Hauler'
+  Hauler = 'Hauler',
+  Supplier = 'Supplier'
 }
 
 // TODO: Could the Map be a type?
@@ -13,6 +14,7 @@ export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([
   [CreepRole.Builder,   2],
   [CreepRole.Repairer,  2],
   [CreepRole.Hauler,    2],
+  [CreepRole.Supplier,  1],
 ]);
 
 // TODO: Could the Map be a type?
@@ -22,6 +24,7 @@ export const RoleBodies: Map<CreepRole, BodyPartConstant[]> = new Map<CreepRole,
   [CreepRole.Builder,   [WORK, WORK, CARRY, MOVE]],
   [CreepRole.Repairer,  [WORK, WORK, CARRY, MOVE]],
   [CreepRole.Hauler,    [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]],
+  [CreepRole.Supplier,  [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]],
 ]);
 
 // Prefix message with Game.time
