@@ -8,12 +8,6 @@ export class RoomManager {
   constructor(room: Room) {
     this.room = room;
 
-    // TODO: Do not do this for every room created
-    // Initialize Memory.rooms
-    if (!(Memory.rooms)) {
-      Memory.rooms = {};
-    }
-
     // Store source ids in memory if it's not already stored for this room
     // TODO: This needs to be manually deleted in-game to reset (whenever I change the keys)
     if (!(Memory.rooms[this.room.name])) {

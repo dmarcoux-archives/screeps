@@ -18,6 +18,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
+  // TODO: Do not do this for every room created
+  // Initialize Memory.rooms
+  if (!(Memory.rooms)) {
+    Memory.rooms = {};
+  }
+
   const rooms: RoomManager[] = [];
   for (const roomName in Game.rooms) {
     rooms.push(new RoomManager(Game.rooms[roomName]));
