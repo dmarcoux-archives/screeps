@@ -8,22 +8,31 @@ export class RoomManager {
   constructor(room: Room) {
     this.room = room;
 
-    // Store source ids in memory if it's not already stored for this room
-    // TODO: This needs to be manually deleted in-game to reset (whenever I change the keys)
+    // TODO: Memory.rooms[this.room.name] needs to be manually deleted in-game to reset (whenever I add/change keys)
     if (!(Memory.rooms[this.room.name])) {
-      Memory.rooms[this.room.name] = { sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id) };
+      // Store ids for sources and towers
+      // TODO: Refresh towerIds when tower is built/destroyed (how to do that?? maybe with the event log... but this must be CPU expensive)
+      Memory.rooms[this.room.name] = {
+        sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id),
+        towerIds: this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
+      };
     }
 
     this.spawner = new Spawner(this.room.name);
     this.spawner.spawnCreeps();
 
-    // TODO: Store towers.id in memory and retrieve them with Game.getObjectById instead of find
-    const towers: StructureTower[] = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER });
-    for (const tower of towers) {
-      const target = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    for (const towerId of Memory.rooms[this.room.name].towerIds) {
+      const tower: StructureTower | null = Game.getObjectById(towerId);
 
-      if (target) {
-        tower.attack(target);
+      if (tower) {
+        const target: Creep | null = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+        if (target) {
+          tower.attack(target);
+        }
+      }
+      else {
+        // TODO: Tower is destroyed, delete its towerId from Memory.rooms[this.room.name].towerId
       }
     }
   }

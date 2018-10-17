@@ -5,12 +5,7 @@ interface CreepMemory {
   working: boolean;
 }
 
-// TODO: Is it needed?
-interface Memory {
-  uuid: number;
-  log: any;
-}
-
 interface RoomMemory {
   sourceIds: string[];
+  towerIds: string[];
 }
