@@ -13,7 +13,8 @@ export class Supplier {
       const supplySite: Structure | null = this.self.pos.findClosestByPath(
         FIND_MY_STRUCTURES,
         {
-          filter: (structure) => (structure.structureType === (STRUCTURE_TOWER || STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity)
+          // TODO: [STRUCTURE_TOWER, STRUCTURE_EXTENSION].includes(structure.structureType) doesn't work... this explains the multiple ifs
+          filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity
         }
       );
 
