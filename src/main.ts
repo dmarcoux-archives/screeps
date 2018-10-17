@@ -18,7 +18,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
     }
   }
 
-  // TODO: Do not do this for every room created
   // Initialize Memory.rooms
   if (!(Memory.rooms)) {
     Memory.rooms = {};
