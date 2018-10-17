@@ -61,6 +61,9 @@ export class Hauler {
               break;
           }
         }
+        else {
+          // TODO: this.self.withdraw from container if present, otherwise done! The container id should be stored in the creep's memory
+        }
       }
     }
   }
