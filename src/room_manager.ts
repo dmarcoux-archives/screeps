@@ -11,7 +11,7 @@ export class RoomManager {
     // TODO: Memory.rooms[this.room.name] needs to be manually deleted in-game to reset (whenever I add/change keys)
     if (!(Memory.rooms[this.room.name])) {
       // Store ids for sources and towers
-      // TODO: Refresh towerIds when tower is built/destroyed (how to do that?? maybe with the event log... but this must be CPU expensive)
+      // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
       Memory.rooms[this.room.name] = {
         sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id),
         towerIds: this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
