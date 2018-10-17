@@ -85,3 +85,6 @@ screeps.json
 # Generated files
 dist/
 .rpt2_cache/
+
+# Flycheck temporary files
+flycheck_*
