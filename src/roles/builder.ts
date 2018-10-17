@@ -15,6 +15,7 @@ export class Builder {
 
   public work() {
     if (this.self.memory.working) {
+      // TODO: Maybe instead of closest, find the construction site closest to being completed (so builders focus on one construction site at a time)
       const constructionSite: ConstructionSite | null = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
 
       if (constructionSite) {
