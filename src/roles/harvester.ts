@@ -12,8 +12,8 @@ export class Harvester {
   public work() {
     // TODO: Could this check be done only once, just after spawning?
     if (!(this.self.memory.sourceId)) {
+      // TODO: How about inverting this and having the room spawning the creep and telling it where to go? I believe it would be more efficient
       const busySourceIds: string[] = _.filter(Memory.creeps, (memory) => memory.role === this.self.memory.role && memory.room === this.self.memory.room && memory.sourceId).map((memory) => memory.sourceId);
-      // TODO: Could it be more efficient?
       const freeSourceIds: string = Memory.rooms[this.self.memory.room].sourceIds.filter((value) => !busySourceIds.includes(value))[0];
 
       this.self.memory.sourceId = freeSourceIds;
