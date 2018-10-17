@@ -20,6 +20,8 @@ export class Spawner {
     let message: string = 'Roles (Current/Target)';
 
     // TODO: Add priority for screeps to spawn depending on which screeps are alive
+    // TODO: Add possibility to execute initialization code for a creep before it's spawned.
+    //       For example, when spawning an harvester, check if a container is next to the source he will harvest. If not, place construction site
     for (const [role, targetNumber] of Roles) {
       const currentNumber: number = _.filter(Game.creeps, (creep) => creep.memory.role === role).length;
       message += ` | ${role}: ${currentNumber}/${targetNumber}`;
