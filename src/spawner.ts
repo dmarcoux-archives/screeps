@@ -5,14 +5,16 @@ import { logMessage, RoleBodies, Roles } from 'globals';
 // Spawn creeps
 export class Spawner {
   private room: string;
+  private spawn: string;
 
-  constructor(room: string) {
+  constructor(room: string, spawn: string) {
     this.room = room;
+    this.spawn = spawn;
   }
 
   public spawnCreeps() {
     // TODO: Improve this. If spawn is busy, put (Game.time + wait) in memory to not run code for nothing
-    const spawning: Spawning | null = Game.spawns.Spawn1.spawning;
+    const spawning: Spawning | null = Game.spawns[this.spawn].spawning;
     if (spawning) {
       return;
     }
@@ -31,7 +33,7 @@ export class Spawner {
         const creepName: string = `${role}-${Game.time}`;
         const options: object = { memory: { room: this.room, role, working: false } };
 
-        switch (Game.spawns.Spawn1.spawnCreep(creepBody, creepName, options)) {
+        switch (Game.spawns[this.spawn].spawnCreep(creepBody, creepName, options)) {
           case OK:
             logMessage(`${this.room} spawning ${role}`);
             break;

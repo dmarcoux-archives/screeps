@@ -12,13 +12,16 @@ export class RoomManager {
     if (!(Memory.rooms[this.room.name])) {
       // Store ids for sources and towers
       // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
+      // TODO: Refresh spawnNames when spawns are built/destroyed
       Memory.rooms[this.room.name] = {
         sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id),
+        spawnNames: this.room.find(FIND_MY_SPAWNS).map((spawn) => spawn.name),
         towerIds: this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
       };
     }
 
-    this.spawner = new Spawner(this.room.name);
+    // TODO: Can only use the first spawn for now...
+    this.spawner = new Spawner(this.room.name, Memory.rooms[this.room.name].spawnNames[0]);
     this.spawner.spawnCreeps();
 
     for (const towerId of Memory.rooms[this.room.name].towerIds) {

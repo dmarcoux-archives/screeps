@@ -7,5 +7,6 @@ interface CreepMemory {
 
 interface RoomMemory {
   sourceIds: string[];
+  spawnNames: string[];
   towerIds: string[];
 }
