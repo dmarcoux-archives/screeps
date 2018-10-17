@@ -32,7 +32,9 @@ export class RoomManager {
         }
       }
       else {
-        // TODO: Tower is destroyed, delete its towerId from Memory.rooms[this.room.name].towerId
+        // Delete memory of missing/destroyed tower
+        const towerIdIndex: number = Memory.rooms[this.room.name].towerIds.indexOf(towerId);
+        Memory.rooms[this.room.name].towerIds.splice(towerIdIndex, 1);
       }
     }
   }
