@@ -38,14 +38,14 @@ export class Hauler {
       }
     }
     else {
-      // TODO: Cache this in memory, perhaps by caching the location of the dropped energy???
       const source: Source | null = Game.getObjectById(this.self.memory.sourceId);
 
       if (source) {
-        const energy: Resource<ResourceConstant> | null = _.max(source.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
+        // TODO: The container id should be stored in memory and retrieved with Game.getObjectById
+        const container: StructureContainer | null = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
 
-        if (energy) {
-          switch (this.self.pickup(energy)) {
+        if (container) {
+          switch (this.self.withdraw(container, RESOURCE_ENERGY)) {
             case OK:
               if (this.self.carry.energy === this.self.carryCapacity) {
                 this.self.memory.working = true;
@@ -55,14 +55,33 @@ export class Hauler {
               this.self.memory.working = true;
               break;
             case ERR_NOT_IN_RANGE:
-              if (this.self.moveTo(energy.pos) === OK) {
-                logMessage(`${this.self.name} => Energy`);
+              if (this.self.moveTo(container.pos) === OK) {
+                logMessage(`${this.self.name} => Container`);
               }
               break;
           }
         }
         else {
-          // TODO: this.self.withdraw from container if present, otherwise done! The container id should be stored in the creep's memory
+          // TODO: Cache the location of the energy?
+          const energy: Resource<ResourceConstant> | null = _.max(source.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
+
+          if (energy) {
+            switch (this.self.pickup(energy)) {
+              case OK:
+                if (this.self.carry.energy === this.self.carryCapacity) {
+                  this.self.memory.working = true;
+                }
+                break;
+              case ERR_FULL:
+                this.self.memory.working = true;
+                break;
+              case ERR_NOT_IN_RANGE:
+                if (this.self.moveTo(energy.pos) === OK) {
+                  logMessage(`${this.self.name} => Energy`);
+                }
+                break;
+            }
+          }
         }
       }
     }
