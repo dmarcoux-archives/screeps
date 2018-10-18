@@ -22,8 +22,14 @@ export class RoomManager {
 
     // TODO: Can only use the first spawn for now...
     this.spawner = new Spawner(this.room.name, Memory.rooms[this.room.name].spawnNames[0]);
-    this.spawner.spawnCreeps();
+  }
 
+  public spawnCreeps() {
+    this.spawner.spawnCreeps();
+  }
+
+  // Defend the room with towers, creeps if in alarm mode (TODO)
+  public defend() {
     for (const towerId of Memory.rooms[this.room.name].towerIds) {
       const tower: StructureTower | null = Game.getObjectById(towerId);
 

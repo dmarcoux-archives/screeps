@@ -23,9 +23,10 @@ export const loop = ErrorMapper.wrapLoop(() => {
     Memory.rooms = {};
   }
 
-  const rooms: RoomManager[] = [];
   for (const roomName in Game.rooms) {
-    rooms.push(new RoomManager(Game.rooms[roomName]));
+    const room: RoomManager = new RoomManager(Game.rooms[roomName]);
+    room.spawnCreeps();
+    room.defend();
   }
 
   // Make creeps work
