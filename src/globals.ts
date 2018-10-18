@@ -12,8 +12,8 @@ export enum CreepRole {
 export const Roles: Map<CreepRole, number> = new Map<CreepRole, number>([
   [CreepRole.Harvester, 2],
   [CreepRole.Hauler,    2],
-  [CreepRole.Upgrader,  2],
-  [CreepRole.Builder,   2],
+  [CreepRole.Upgrader,  5],
+  [CreepRole.Builder,   5],
   [CreepRole.Repairer,  2],
   [CreepRole.Supplier,  1]
 ]);
