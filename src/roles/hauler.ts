@@ -9,17 +9,6 @@ export class Hauler {
   }
 
   public work() {
-    // TODO: Could this check be done only once, just after spawning?
-    if (!(this.self.memory.sourceId)) {
-      // TODO: This is limiting the number of haulers per source to 1. Multiple haulers per source might be better, if needed???
-      // alternative?: const countSourceIds: Dictionary<number> = _.countBy(_.filter(Memory.creeps, (memory) => memory.role === this.self.memory.role && memory.room === this.self.memory.room && memory.sourceId).map((memory) => memory.sourceId));
-      const busySourceIds: string[] = _.filter(Memory.creeps, (memory) => memory.role === this.self.memory.role && memory.room === this.self.memory.room && memory.sourceId).map((memory) => memory.sourceId);
-      // TODO: Could it be more efficient?
-      const freeSourceIds: string = Memory.rooms[this.self.memory.room].sourceIds.filter((value) => !busySourceIds.includes(value))[0];
-
-      this.self.memory.sourceId = freeSourceIds;
-    }
-
     if (this.self.memory.working) {
       // TODO: Don't hardcode the spawn
       switch(this.self.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY)) {

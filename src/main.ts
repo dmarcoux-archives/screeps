@@ -1,4 +1,5 @@
 import { CreepRole } from 'globals';
+import { BasicHarvester } from 'roles/basic_harvester';
 import { Builder } from 'roles/builder';
 import { Harvester } from 'roles/harvester';
 import { Hauler } from 'roles/hauler';
@@ -14,6 +15,18 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // Automatically delete memory of missing creeps
   for (const creepName in Memory.creeps) {
     if (!(creepName in Game.creeps)) {
+      const creepMemory: CreepMemory = Memory.creeps[creepName];
+      switch (creepMemory.role) {
+        case CreepRole.Harvester:
+          const harvestedSourceIdIndex: number = Memory.rooms[creepMemory.room].harvestedSourceIds.indexOf(creepMemory.sourceId);
+          Memory.rooms[creepMemory.room].harvestedSourceIds.splice(harvestedSourceIdIndex, 1);
+          break;
+        case CreepRole.Hauler:
+          const hauledSourceIdIndex: number = Memory.rooms[creepMemory.room].hauledSourceIds.indexOf(creepMemory.sourceId);
+          Memory.rooms[creepMemory.room].hauledSourceIds.splice(hauledSourceIdIndex, 1);
+          break;
+      }
+
       delete Memory.creeps[creepName];
     }
   }
@@ -36,6 +49,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
     // TODO: Improve this
     switch(creep.memory.role) {
+      case CreepRole.BasicHarvester:
+        creepWithRole = new BasicHarvester(creep);
+        break;
       case CreepRole.Harvester:
         creepWithRole = new Harvester(creep);
         break;
