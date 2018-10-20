@@ -1,7 +1,6 @@
 import { logMessage } from 'globals';
 
 // Creeps with the builder role
-// TODO: Build roads between sources and spawn
 // TODO: Build roads between sources and room controller
 // TODO: Build walls/ramparts to block room entrances/exits and around controller
 // TODO: Build towers (one next to spawn, others...???)

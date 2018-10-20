@@ -32,7 +32,8 @@ export class RoomManager {
     // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
     Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
 
-    // Store sources and their container in memory
+    // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
+    // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
     if (Memory.rooms[this.room.name].sources.length === 0) {
       // TODO: Support multi-spawns
       const spawn: StructureSpawn = Game.spawns[Memory.rooms[this.room.name].spawnNames[0]];
@@ -40,13 +41,19 @@ export class RoomManager {
 
       for (const source of sources) {
         const pathSteps: PathStep[] = spawn.pos.findPathTo(source.pos);
-        const pathStep: PathStep = pathSteps[(pathSteps.length - 2)];
 
-        Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: pathStep.x, containerPositionY: pathStep.y })
-        const containerPosition: RoomPosition = new RoomPosition(pathStep.x, pathStep.y, this.room.name);
-        const buildContainer: boolean = (_.filter(containerPosition.lookFor(LOOK_STRUCTURES), (structure) => structure.structureType === STRUCTURE_CONTAINER).length === 0);
-        if (buildContainer) {
-          this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER)
+        // Build container
+        pathSteps.pop(); // The last path step is the source, nothing to build there
+        const containerPathStep: PathStep = pathSteps.pop()!;
+
+        Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y })
+        const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
+        this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
+
+        // Build roads
+        for (const roadPathStep of pathSteps) {
+          const roadPosition: RoomPosition = new RoomPosition(roadPathStep.x, roadPathStep.y, this.room.name);
+          this.room.createConstructionSite(roadPosition, STRUCTURE_ROAD);
         }
       }
     }
