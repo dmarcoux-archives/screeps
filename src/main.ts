@@ -38,6 +38,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   for (const roomName in Game.rooms) {
     const room: RoomManager = new RoomManager(Game.rooms[roomName]);
+    room.setup();
     room.spawnCreeps();
     room.defend();
   }

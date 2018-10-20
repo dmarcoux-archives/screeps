@@ -1,4 +1,5 @@
 interface CreepMemory {
+  moveTo: { x: number, y: number };
   role: string;
   room: string;
   sourceId: string; // For harvesters and haulers
@@ -20,7 +21,7 @@ interface RoomMemory {
   constructionSiteIds: string[];
   harvestedSourceIds: string[];
   hauledSourceIds: string[];
-  sourceIds: string[];
+  sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }>;
   spawnNames: string[];
   spawnQueue: Array<{ creepRole: CreepRole, memory: {} }>;
   towerIds: string[];

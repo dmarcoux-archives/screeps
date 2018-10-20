@@ -14,10 +14,10 @@ export class RoomManager {
       // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
       // TODO: Refresh spawnNames when spawns are built/destroyed
       Memory.rooms[this.room.name] = {
-        constructionSiteIds: this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id),
+        constructionSiteIds: [],
         harvestedSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Harvester).map((memory) => memory.sourceId),
         hauledSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Hauler).map((memory) => memory.sourceId),
-        sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id),
+        sources: [],
         spawnNames: this.room.find(FIND_MY_SPAWNS).map((spawn) => spawn.name),
         spawnQueue: [],
         towerIds: this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
@@ -28,9 +28,33 @@ export class RoomManager {
     this.spawner = new Spawner(this.room.name, Memory.rooms[this.room.name].spawnNames[0]);
   }
 
+  public setup() {
+    // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
+    Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
+
+    // Store sources and their container in memory
+    if (Memory.rooms[this.room.name].sources.length === 0) {
+      // TODO: Support multi-spawns
+      const spawn: StructureSpawn = Game.spawns[Memory.rooms[this.room.name].spawnNames[0]];
+      const sources: Source[] = this.room.find(FIND_SOURCES)
+
+      for (const source of sources) {
+        const pathSteps: PathStep[] = spawn.pos.findPathTo(source.pos);
+        const pathStep: PathStep = pathSteps[(pathSteps.length - 2)];
+
+        Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: pathStep.x, containerPositionY: pathStep.y })
+        const containerPosition: RoomPosition = new RoomPosition(pathStep.x, pathStep.y, this.room.name);
+        const buildContainer: boolean = (_.filter(containerPosition.lookFor(LOOK_STRUCTURES), (structure) => structure.structureType === STRUCTURE_CONTAINER).length === 0);
+        if (buildContainer) {
+          this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER)
+        }
+      }
+    }
+  }
+
   // TODO: Prioritize harvesters and haulers (so put them first in the spawn queue, even if there are other creeps in the spawn queue)
   public spawnCreeps() {
-    const sourceIds: string[] = Memory.rooms[this.room.name].sourceIds;
+    const sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }> = Memory.rooms[this.room.name].sources;
 
     // TODO: This is not efficient, especially when having more and more creeps... It could perhaps be done in main.ts when we looped through creeps with Game.creeps
     const numberOfCreeps: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name).length;
@@ -38,23 +62,28 @@ export class RoomManager {
     // Without creeps, we need one basic harvester to start
     // TODO: Check if the harvesters' containers have energy, if so spawn haulers instead
     if (numberOfCreeps === 0) {
-      Memory.rooms[this.room.name].spawnQueue.unshift({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sourceIds[0] } });
+      Memory.rooms[this.room.name].spawnQueue.unshift({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
     }
 
     // Are there enough harvesters, so one harvester per source?
     const harvestedSourceIds: string[] = Memory.rooms[this.room.name].harvestedSourceIds;
-    if (harvestedSourceIds.length < sourceIds.length) {
-      const sourcesWithoutHarvester: string[] = sourceIds.filter((sourceId) => !harvestedSourceIds.includes(sourceId));
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Harvester, memory: { sourceId: sourcesWithoutHarvester[0] } });
-      Memory.rooms[this.room.name].harvestedSourceIds.push(sourcesWithoutHarvester[0]);
+    if (harvestedSourceIds.length < sources.length) {
+      const sourceWithoutHarvester: { id: string, containerPositionX: number, containerPositionY: number } = sources.filter((source) => !harvestedSourceIds.includes(source.id))[0];
+      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Harvester,
+                                                     memory: {
+                                                       moveTo: { x: sourceWithoutHarvester.containerPositionX, y: sourceWithoutHarvester.containerPositionY },
+                                                       sourceId: sourceWithoutHarvester.id
+                                                     }
+                                                   });
+      Memory.rooms[this.room.name].harvestedSourceIds.push(sourceWithoutHarvester.id);
     }
 
     // Are there enough haulers, so one hauler per source? (TODO: Adapt the number of haulers based on the distance to cover between the source and the drop point)
     const hauledSourceIds: string[] = Memory.rooms[this.room.name].hauledSourceIds;
-    if (hauledSourceIds.length < sourceIds.length) {
-      const sourcesWithoutHauler: string[] = sourceIds.filter((sourceId) => !hauledSourceIds.includes(sourceId));
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Hauler, memory: { sourceId: sourcesWithoutHauler[0] } });
-      Memory.rooms[this.room.name].hauledSourceIds.push(sourcesWithoutHauler[0]);
+    if (hauledSourceIds.length < sources.length) {
+      const sourceWithoutHauler: string = sources.filter((source) => !hauledSourceIds.includes(source.id))[0].id;
+      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Hauler, memory: { sourceId: sourceWithoutHauler } });
+      Memory.rooms[this.room.name].hauledSourceIds.push(sourceWithoutHauler);
     }
 
     const numberOfUpgraders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Upgrader).length;
