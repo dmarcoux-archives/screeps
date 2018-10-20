@@ -14,6 +14,7 @@ export class RoomManager {
       // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
       // TODO: Refresh spawnNames when spawns are built/destroyed
       Memory.rooms[this.room.name] = {
+        constructionSiteIds: this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id),
         harvestedSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Harvester).map((memory) => memory.sourceId),
         hauledSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Hauler).map((memory) => memory.sourceId),
         sourceIds: this.room.find(FIND_SOURCES).map((source) => source.id),
@@ -61,10 +62,13 @@ export class RoomManager {
       Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
     }
 
-    // TODO: Spawn builders if there are construction sites
-    const numberOfBuilders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Builder).length;
-    if (numberOfBuilders < 0 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Builder, memory: {} });
+    // Spawn builders if there are construction sites
+    const constructionSiteIds: string[] = Memory.rooms[this.room.name].constructionSiteIds;
+    if (constructionSiteIds.length > 0) {
+      const numberOfBuilders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Builder).length;
+      if (numberOfBuilders < 2 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
+        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Builder, memory: {} });
+      }
     }
 
     // TODO: Spawn repairers if there are structures to repair

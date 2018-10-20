@@ -14,33 +14,57 @@ export class Builder {
     this.self = creep;
   }
 
+  // TODO: DRY the code
+  // TODO: Use guard clauses
   public work() {
     if (this.self.memory.working) {
       // TODO: Maybe instead of closest, find the construction site closest to being completed (so builders focus on one construction site at a time)
-      const constructionSite: ConstructionSite | null = this.self.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+      const constructionSiteIds: string[] = Memory.rooms[this.self.room.name].constructionSiteIds;
+      if (constructionSiteIds.length > 0) {
+        const constructionSite: ConstructionSite | null = Game.getObjectById(constructionSiteIds[0]);
 
-      if (constructionSite) {
-        switch(this.self.build(constructionSite)) {
-          case ERR_NOT_ENOUGH_RESOURCES:
-            this.self.memory.working = false;
-            break;
-          case ERR_NOT_IN_RANGE:
-            if (this.self.moveTo(constructionSite.pos) === OK) {
-              logMessage(`${this.self.name} => Construction Site`);
+        if (constructionSite) {
+          switch(this.self.build(constructionSite)) {
+            case ERR_NOT_ENOUGH_RESOURCES:
+              this.self.memory.working = false;
+              break;
+            case ERR_NOT_IN_RANGE:
+              if (this.self.moveTo(constructionSite.pos) === OK) {
+                logMessage(`${this.self.name} => Construction Site`);
+              }
+              break;
+          }
+        }
+        else {
+          // Remove the construction site id from the memory
+          Memory.rooms[this.self.room.name].constructionSiteIds.splice(0, 1);
+
+          if (this.self.room.controller) {
+            switch(this.self.upgradeController(this.self.room.controller)) {
+              case ERR_NOT_ENOUGH_RESOURCES:
+                this.self.memory.working = false;
+                break;
+              case ERR_NOT_IN_RANGE:
+                if (this.self.moveTo(this.self.room.controller.pos) === OK) {
+                  logMessage(`${this.self.name} => Controller`);
+                }
+                break;
             }
-            break;
+          }
         }
       }
-      else if (this.self.room.controller) {
-        switch(this.self.upgradeController(this.self.room.controller)) {
-          case ERR_NOT_ENOUGH_RESOURCES:
-            this.self.memory.working = false;
-            break;
-          case ERR_NOT_IN_RANGE:
-            if (this.self.moveTo(this.self.room.controller.pos) === OK) {
-              logMessage(`${this.self.name} => Controller`);
-            }
-            break;
+      else {
+        if (this.self.room.controller) {
+          switch(this.self.upgradeController(this.self.room.controller)) {
+            case ERR_NOT_ENOUGH_RESOURCES:
+              this.self.memory.working = false;
+              break;
+            case ERR_NOT_IN_RANGE:
+              if (this.self.moveTo(this.self.room.controller.pos) === OK) {
+                logMessage(`${this.self.name} => Controller`);
+              }
+              break;
+          }
         }
       }
     }
