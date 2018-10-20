@@ -51,25 +51,25 @@ export const loop = ErrorMapper.wrapLoop(() => {
     // TODO: Improve this
     switch(creep.memory.role) {
       case CreepRole.BasicHarvester:
-        creepWithRole = new BasicHarvester(creep);
+        creepWithRole = new BasicHarvester(creep.id);
         break;
       case CreepRole.Harvester:
-        creepWithRole = new Harvester(creep);
+        creepWithRole = new Harvester(creep.id);
         break;
       case CreepRole.Upgrader:
-        creepWithRole = new Upgrader(creep);
+        creepWithRole = new Upgrader(creep.id);
         break;
       case CreepRole.Builder:
-        creepWithRole = new Builder(creep);
+        creepWithRole = new Builder(creep.id);
         break;
       case CreepRole.Repairer:
-        creepWithRole = new Repairer(creep);
+        creepWithRole = new Repairer(creep.id);
         break;
       case CreepRole.Hauler:
-        creepWithRole = new Hauler(creep);
+        creepWithRole = new Hauler(creep.id);
         break;
       case CreepRole.Supplier:
-        creepWithRole = new Supplier(creep);
+        creepWithRole = new Supplier(creep.id);
         break;
     }
 

@@ -1,16 +1,14 @@
 import { logMessage } from 'globals';
 
 // Creeps with the supplier role
-export class Supplier {
-  private self: Creep;
-
-  constructor(creep: Creep) {
-    this.self = creep;
+export class Supplier extends Creep {
+  constructor(id: string) {
+    super(id);
   }
 
   public work() {
-    if (this.self.memory.working) {
-      const supplySite: Structure | null = this.self.pos.findClosestByPath(
+    if (this.memory.working) {
+      const supplySite: Structure | null = this.pos.findClosestByPath(
         FIND_MY_STRUCTURES,
         {
           // TODO: [STRUCTURE_TOWER, STRUCTURE_EXTENSION].includes(structure.structureType) doesn't work... this explains the multiple ifs
@@ -19,14 +17,14 @@ export class Supplier {
       );
 
       if (supplySite) {
-        switch(this.self.transfer(supplySite, RESOURCE_ENERGY)) {
+        switch(this.transfer(supplySite, RESOURCE_ENERGY)) {
           case ERR_NOT_ENOUGH_RESOURCES:
-            this.self.memory.working = false;
+            this.memory.working = false;
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.self.moveTo(supplySite.pos) === OK) {
+            if (this.moveTo(supplySite.pos) === OK) {
               // TODO: Bit more accurate here
-              logMessage(`${this.self.name} => Supply Site`);
+              logMessage(`${this.name} => Supply Site`);
             }
             break;
         }
@@ -38,15 +36,15 @@ export class Supplier {
       const energy: Resource<ResourceConstant> | null = _.max(Game.spawns.Spawn1.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
 
       if (energy) {
-        switch (this.self.pickup(energy)) {
+        switch (this.pickup(energy)) {
             // case OK:
             //   break;
           case ERR_FULL:
-            this.self.memory.working = true;
+            this.memory.working = true;
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.self.moveTo(energy.pos) === OK) {
-              logMessage(`${this.self.name} => Energy`);
+            if (this.moveTo(energy.pos) === OK) {
+              logMessage(`${this.name} => Energy`);
             }
             break;
         }

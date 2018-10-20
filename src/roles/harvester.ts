@@ -1,29 +1,27 @@
 import { logMessage } from 'globals';
 
 // Creeps with the harvester role
-export class Harvester {
-  private self: Creep;
-
-  constructor(creep: Creep) {
-    this.self = creep;
+export class Harvester extends Creep {
+  constructor(id: string) {
+    super(id);
   }
 
   public work() {
-    const moveTo: { x: number, y: number } = this.self.memory.moveTo;
+    const moveTo: { x: number, y: number } = this.memory.moveTo;
 
-    if (this.self.pos.x === moveTo.x && this.self.pos.y === moveTo.y) {
-      const source: Source | null = Game.getObjectById(this.self.memory.sourceId);
+    if (this.pos.x === moveTo.x && this.pos.y === moveTo.y) {
+      const source: Source | null = Game.getObjectById(this.memory.sourceId);
 
       if (source) {
-        switch (this.self.harvest(source)) {
+        switch (this.harvest(source)) {
           case ERR_NOT_IN_RANGE:
-            logMessage(`${this.self.name} => Source`);
+            logMessage(`${this.name} => Source`);
             break;
         }
       }
     }
     else {
-      this.self.moveTo(moveTo.x, moveTo.y);
+      this.moveTo(moveTo.x, moveTo.y);
     }
   }
 }
