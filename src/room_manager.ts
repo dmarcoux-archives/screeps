@@ -83,6 +83,7 @@ export class RoomManager {
   }
 
   // Defend the room with towers, creeps if in alarm mode (TODO)
+  // TODO: List of enemies in room's memory so towers can focus on one
   public defend() {
     for (const towerId of Memory.rooms[this.room.name].towerIds) {
       const tower: StructureTower | null = Game.getObjectById(towerId);
