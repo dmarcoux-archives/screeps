@@ -40,15 +40,34 @@ export class RoomManager {
       const sources: Source[] = this.room.find(FIND_SOURCES)
 
       for (const source of sources) {
-        const pathSteps: PathStep[] = spawn.pos.findPathTo(source.pos);
+        // TODO: Use type
+        // TODO: Improve this... just too many ifs
+        const builtContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
+        let pathSteps: PathStep[];
+        if (builtContainer) {
+          Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y });
+          pathSteps = spawn.pos.findPathTo(builtContainer.pos);
+          pathSteps.pop(); // The last path step is the container, nothing to build there
+        }
+        else {
+          const container = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
+          if (container) {
+            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y });
+            pathSteps = spawn.pos.findPathTo(container.pos);
+            pathSteps.pop(); // The last path step is the container, nothing to build there
+          }
+          else {
+            pathSteps = spawn.pos.findPathTo(source.pos);
 
-        // Build container
-        pathSteps.pop(); // The last path step is the source, nothing to build there
-        const containerPathStep: PathStep = pathSteps.pop()!;
+            // Build container
+            pathSteps.pop(); // The last path step is the source, nothing to build there
+            const containerPathStep: PathStep = pathSteps.pop()!;
 
-        Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y })
-        const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
-        this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
+            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y })
+            const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
+            this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
+          }
+        }
 
         // Build roads
         for (const roadPathStep of pathSteps) {
