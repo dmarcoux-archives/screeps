@@ -20,24 +20,23 @@ export class BasicHarvester extends Creep {
           }
           break;
       }
-    }
-    else {
-      if (this.carry.energy === this.carryCapacity) {
-        this.memory.working = true;
-      }
-      else {
-        const source: Source | null = Game.getObjectById(this.memory.sourceId);
 
-        if (source) {
-          switch (this.harvest(source)) {
-            case ERR_NOT_IN_RANGE:
-              if (this.moveTo(source.pos) === OK) {
-                logMessage(`${this.name} => Source`);
-              }
-              break;
-          }
+      return;
+    }
+
+    if (this.carry.energy === this.carryCapacity) {
+      this.memory.working = true;
+      return;
+    }
+
+    const source: Source = Game.getObjectById<Source>(this.memory.sourceId)!;
+
+    switch (this.harvest(source)) {
+      case ERR_NOT_IN_RANGE:
+        if (this.moveTo(source.pos) === OK) {
+          logMessage(`${this.name} => Source`);
         }
-      }
+        break;
     }
   }
 }
