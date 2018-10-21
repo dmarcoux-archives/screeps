@@ -21,6 +21,7 @@ export class RoomManager {
         sources: [],
         spawnNames: this.room.find(FIND_MY_SPAWNS).map((spawn) => spawn.name),
         spawnQueue: [],
+        suppliedStructureIds: this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id),
         towerIds: this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
       };
     }
@@ -35,8 +36,12 @@ export class RoomManager {
     Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
 
     // TODO: Update every X ticks?
-    // Update the list of structures
-    Memory.rooms[this.room.name].damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id)
+    // Update the list of damaged structures
+    Memory.rooms[this.room.name].damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id);
+
+    // TODO: Update every X ticks?
+    // Update the list of supplied tructures
+    Memory.rooms[this.room.name].suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);
 
     // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
     // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
@@ -141,10 +146,13 @@ export class RoomManager {
       }
     }
 
-    // TODO: Spawn suppliers if there are structures to supply (extensions, towers, etc...)
-    const numberOfSuppliers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Supplier).length;
-    if (numberOfSuppliers < 0 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Supplier) === -1) {
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Supplier, memory: {} });
+    // Spawn suppliers if there are supplied structures
+    const suppliedStructureIds: string[] = Memory.rooms[this.room.name].suppliedStructureIds;
+    if (suppliedStructureIds.length > 0) {
+      const numberOfSuppliers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Supplier).length;
+      if (numberOfSuppliers < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Supplier) === -1) {
+        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Supplier, memory: {} });
+      }
     }
 
     this.spawner.spawnCreeps();

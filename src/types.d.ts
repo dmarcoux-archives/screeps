@@ -25,5 +25,6 @@ interface RoomMemory {
   sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }>;
   spawnNames: string[];
   spawnQueue: Array<{ creepRole: CreepRole, memory: {} }>;
+  suppliedStructureIds: string[];
   towerIds: string[];
 }
