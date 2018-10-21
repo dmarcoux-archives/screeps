@@ -161,20 +161,28 @@ export class RoomManager {
   // Defend the room with towers, creeps if in alarm mode (TODO)
   // TODO: List of enemies in room's memory so towers can focus on one
   public defend() {
-    for (const towerId of Memory.rooms[this.room.name].towerIds) {
-      const tower: StructureTower | null = Game.getObjectById(towerId);
+    const towerIds: string[] = Memory.rooms[this.room.name].towerIds;
 
-      if (tower) {
-        const target: Creep | null = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+    if (towerIds.length === 0) {
+      return;
+    }
 
-        if (target) {
-          tower.attack(target);
-        }
-      }
-      else {
+    for (const towerId of towerIds) {
+      const tower: StructureTower | null = Game.getObjectById<StructureTower>(towerId);
+
+      if (tower === null) {
         // Delete memory of missing/destroyed tower
         const towerIdIndex: number = Memory.rooms[this.room.name].towerIds.indexOf(towerId);
         Memory.rooms[this.room.name].towerIds.splice(towerIdIndex, 1);
+
+        // Nothing more to do, go to next tower
+        continue;
+      }
+
+      const target: Creep | null = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+      if (target) {
+        tower.attack(target);
       }
     }
   }
