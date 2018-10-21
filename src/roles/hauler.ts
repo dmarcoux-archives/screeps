@@ -24,53 +24,53 @@ export class Hauler extends Creep {
           }
           break;
       }
+
+      return;
     }
-    else {
-      const source: Source | null = Game.getObjectById(this.memory.sourceId);
 
-      if (source) {
-        // TODO: The container id should be stored in memory and retrieved with Game.getObjectById
-        const container: StructureContainer | null = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
+    const source: Source = Game.getObjectById<Source>(this.memory.sourceId)!;
 
-        if (container) {
-          switch (this.withdraw(container, RESOURCE_ENERGY)) {
-            case OK:
-              if (this.carry.energy === this.carryCapacity) {
-                this.memory.working = true;
-              }
-              break;
-            case ERR_FULL:
-              this.memory.working = true;
-              break;
-            case ERR_NOT_IN_RANGE:
-              if (this.moveTo(container.pos) === OK) {
-                logMessage(`${this.name} => Container`);
-              }
-              break;
+    // TODO: The container id should be stored in memory and retrieved with Game.getObjectById
+    const container: StructureContainer | null = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
+
+    if (container) {
+      switch (this.withdraw(container, RESOURCE_ENERGY)) {
+        case OK:
+          if (this.carry.energy === this.carryCapacity) {
+            this.memory.working = true;
           }
-        }
-        else {
-          // TODO: Cache the location of the energy?
-          const energy: Resource<ResourceConstant> | null = _.max(source.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
-
-          if (energy) {
-            switch (this.pickup(energy)) {
-              case OK:
-                if (this.carry.energy === this.carryCapacity) {
-                  this.memory.working = true;
-                }
-                break;
-              case ERR_FULL:
-                this.memory.working = true;
-                break;
-              case ERR_NOT_IN_RANGE:
-                if (this.moveTo(energy.pos) === OK) {
-                  logMessage(`${this.name} => Energy`);
-                }
-                break;
-            }
+          break;
+        case ERR_FULL:
+          this.memory.working = true;
+          break;
+        case ERR_NOT_IN_RANGE:
+          if (this.moveTo(container.pos) === OK) {
+            logMessage(`${this.name} => Container`);
           }
-        }
+          break;
+      }
+
+      return;
+    }
+
+    // TODO: Cache the location of the energy?
+    const energy: Resource<ResourceConstant> | null = _.max(source.pos.findInRange(FIND_DROPPED_RESOURCES, 1, { filter: (resource) => resource.resourceType === RESOURCE_ENERGY }), (resource) => resource.amount);
+
+    if (energy) {
+      switch (this.pickup(energy)) {
+        case OK:
+          if (this.carry.energy === this.carryCapacity) {
+            this.memory.working = true;
+          }
+          break;
+        case ERR_FULL:
+          this.memory.working = true;
+          break;
+        case ERR_NOT_IN_RANGE:
+          if (this.moveTo(energy.pos) === OK) {
+            logMessage(`${this.name} => Energy`);
+          }
+          break;
       }
     }
   }
