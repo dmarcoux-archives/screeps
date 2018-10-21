@@ -8,40 +8,38 @@ export class Repairer extends Creep {
 
   public work() {
     if (this.memory.working) {
-      const repairSite: Structure | null = this.pos.findClosestByPath(
-        FIND_STRUCTURES,
-        {
-          filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL
-        }
-      );
+      const damagedStructureIds: string[] = Memory.rooms[this.memory.room].damagedStructureIds;
 
-      if (repairSite) {
-        switch(this.repair(repairSite)) {
-          case ERR_NOT_ENOUGH_RESOURCES:
-            this.memory.working = false;
-            break;
-          case ERR_NOT_IN_RANGE:
-            if (this.moveTo(repairSite.pos) === OK) {
-              logMessage(`${this.name} => Repair Site`);
-            }
-            break;
-        }
-      }
-      else {
-        // TODO: DRY this (duplicated code from builder)
-        // Act as a builder if there is nothing to repair
-        const constructionSite: ConstructionSite | null = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
-
-        if (constructionSite) {
-          switch(this.build(constructionSite)) {
+      if (damagedStructureIds.length > 0) {
+        const damagedStructure: Structure | null = Game.getObjectById(damagedStructureIds[0]);
+        if (damagedStructure) {
+          switch(this.repair(damagedStructure)) {
             case ERR_NOT_ENOUGH_RESOURCES:
               this.memory.working = false;
               break;
             case ERR_NOT_IN_RANGE:
-              if (this.moveTo(constructionSite.pos) === OK) {
-                logMessage(`${this.name} => Construction Site`);
+              if (this.moveTo(damagedStructure.pos) === OK) {
+                logMessage(`${this.name} => Damaged Structure`);
               }
               break;
+          }
+        }
+        else {
+          // TODO: DRY this (duplicated code from builder)
+          // Act as a builder if there is nothing to repair
+          const constructionSite: ConstructionSite | null = this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+
+          if (constructionSite) {
+            switch(this.build(constructionSite)) {
+              case ERR_NOT_ENOUGH_RESOURCES:
+                this.memory.working = false;
+                break;
+              case ERR_NOT_IN_RANGE:
+                if (this.moveTo(constructionSite.pos) === OK) {
+                  logMessage(`${this.name} => Construction Site`);
+                }
+                break;
+            }
           }
         }
       }

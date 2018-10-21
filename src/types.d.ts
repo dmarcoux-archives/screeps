@@ -19,6 +19,7 @@ declare enum CreepRole {
 
 interface RoomMemory {
   constructionSiteIds: string[];
+  damagedStructureIds: string[];
   harvestedSourceIds: string[];
   hauledSourceIds: string[];
   sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }>;

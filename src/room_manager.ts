@@ -15,6 +15,7 @@ export class RoomManager {
       // TODO: Refresh spawnNames when spawns are built/destroyed
       Memory.rooms[this.room.name] = {
         constructionSiteIds: [],
+        damagedStructureIds: this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id),
         harvestedSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Harvester).map((memory) => memory.sourceId),
         hauledSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Hauler).map((memory) => memory.sourceId),
         sources: [],
@@ -29,8 +30,13 @@ export class RoomManager {
   }
 
   public setup() {
+    // TODO: Update every X ticks?
     // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
     Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
+
+    // TODO: Update every X ticks?
+    // Update the list of structures
+    Memory.rooms[this.room.name].damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id)
 
     // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
     // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
@@ -121,15 +127,18 @@ export class RoomManager {
     const constructionSiteIds: string[] = Memory.rooms[this.room.name].constructionSiteIds;
     if (constructionSiteIds.length > 0) {
       const numberOfBuilders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Builder).length;
-      if (numberOfBuilders < 2 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
+      if (numberOfBuilders < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
         Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Builder, memory: {} });
       }
     }
 
-    // TODO: Spawn repairers if there are structures to repair
-    const numberOfRepairers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Repairer).length;
-    if (numberOfRepairers < 0 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Repairer) === -1) {
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Repairer, memory: {} });
+    // Spawn repairers if there are damaged structures to repair
+    const damagedStructureIds: string[] = Memory.rooms[this.room.name].damagedStructureIds;
+    if (damagedStructureIds.length > 0) {
+      const numberOfRepairers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Repairer).length;
+      if (numberOfRepairers < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Repairer) === -1) {
+        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Repairer, memory: {} });
+      }
     }
 
     // TODO: Spawn suppliers if there are structures to supply (extensions, towers, etc...)
