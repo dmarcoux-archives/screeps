@@ -14,21 +14,24 @@ import { ErrorMapper } from 'utils/ErrorMapper';
 export const loop = ErrorMapper.wrapLoop(() => {
   // Automatically delete memory of missing creeps
   for (const creepName in Memory.creeps) {
-    if (!(creepName in Game.creeps)) {
-      const creepMemory: CreepMemory = Memory.creeps[creepName];
-      switch (creepMemory.role) {
-        case CreepRole.Harvester:
-          const harvestedSourceIdIndex: number = Memory.rooms[creepMemory.room].harvestedSourceIds.indexOf(creepMemory.sourceId);
-          Memory.rooms[creepMemory.room].harvestedSourceIds.splice(harvestedSourceIdIndex, 1);
-          break;
-        case CreepRole.Hauler:
-          const hauledSourceIdIndex: number = Memory.rooms[creepMemory.room].hauledSourceIds.indexOf(creepMemory.sourceId);
-          Memory.rooms[creepMemory.room].hauledSourceIds.splice(hauledSourceIdIndex, 1);
-          break;
-      }
-
-      delete Memory.creeps[creepName];
+    if (creepName in Game.creeps) {
+      // Creep is present, go to the next creep
+      continue;
     }
+
+    const creepMemory: CreepMemory = Memory.creeps[creepName];
+    switch (creepMemory.role) {
+      case CreepRole.Harvester:
+        const harvestedSourceIdIndex: number = Memory.rooms[creepMemory.room].harvestedSourceIds.indexOf(creepMemory.sourceId);
+        Memory.rooms[creepMemory.room].harvestedSourceIds.splice(harvestedSourceIdIndex, 1);
+        break;
+      case CreepRole.Hauler:
+        const hauledSourceIdIndex: number = Memory.rooms[creepMemory.room].hauledSourceIds.indexOf(creepMemory.sourceId);
+        Memory.rooms[creepMemory.room].hauledSourceIds.splice(hauledSourceIdIndex, 1);
+        break;
+    }
+
+    delete Memory.creeps[creepName];
   }
 
   // Initialize Memory.rooms
