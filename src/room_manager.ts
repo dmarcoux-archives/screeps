@@ -99,7 +99,9 @@ export class RoomManager {
     // Without creeps, we need one basic harvester to start
     // TODO: Check if the harvesters' containers have energy, if so spawn haulers instead
     if (numberOfCreeps === 0) {
-      Memory.rooms[this.room.name].spawnQueue.unshift({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
+      if (Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.BasicHarvester) === -1) {
+        Memory.rooms[this.room.name].spawnQueue.unshift({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
+      }
     }
 
     // Are there enough harvesters, so one harvester per source?
