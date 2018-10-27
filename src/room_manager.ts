@@ -165,7 +165,7 @@ export class RoomManager {
   }
 
   // Defend the room with towers, creeps if in alarm mode (TODO)
-  // TODO: List of enemies in room's memory so towers can focus on one
+  // TODO: List of enemies in room's memory so towers can focus on one. Also avoid running this code if no enemies are present
   public defend() {
     const towerIds: string[] = Memory.rooms[this.room.name].towerIds;
 
