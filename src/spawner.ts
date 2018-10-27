@@ -1,4 +1,4 @@
-import { CreepRole, logMessage, RoleBodies } from 'globals';
+import { BodyPartLetters, CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
 
 // Spawn creeps
 export class Spawner {
@@ -12,7 +12,8 @@ export class Spawner {
 
   // TODO: Spawn creep on demand just in time for a creep which will die (check creep.ticksToLive)
   public spawnCreeps() {
-    const spawnQueue: Array<{ creepRole: CreepRole, memory: object }> = Memory.rooms[this.room].spawnQueue;
+    // Sort the spawn queue based on the spawn priority
+    const spawnQueue: Array<{ creepRole: CreepRole, memory: object }> = Memory.rooms[this.room].spawnQueue.sort((a, b) => CreepSpawnPriority.indexOf(a.creepRole) - CreepSpawnPriority.indexOf(b.creepRole));
 
     if (spawnQueue.length === 0) {
       return
@@ -25,7 +26,8 @@ export class Spawner {
     }
 
     const creepRole: CreepRole = spawnQueue[0].creepRole;
-    const creepBody: BodyPartConstant[] = RoleBodies.get(creepRole)!;
+    const creepBodyString: string = this.expandCreepBody(RoleBodies.get(creepRole)![0]);
+    const creepBody: BodyPartConstant[] = this.createCreepBody(creepBodyString);
     const creepName: string = `${creepRole}-${Game.time}`;
     // Add role specific memory to the standard memory
     const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room, role: creepRole, working: false }) };
@@ -42,5 +44,58 @@ export class Spawner {
         logMessage(`${this.room} not enough energy to spawn ${creepRole}`);
         break;
     }
+  }
+
+  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
+  //   Example 1: this.expandCreepBody('2(CCM)2(AR)'); => 'CCMCCMARAR'
+  //   Example 2: this.expandCreepBody('5(WM)3A'); => 'WMWMWMWMWM3A'
+  private expandCreepBody(bodyString: string): string {
+    const regExp: RegExp = /(\d+)\(([a-zA-Z]+)\)/;
+    let match: RegExpExecArray | null;
+
+    do {
+      match = regExp.exec(bodyString);
+
+      if (match) {
+        const times = parseInt(match[1], 10);
+        let expandedPartsGroup: string = "";
+
+        for (let i = 0; i < times; i++) {
+          expandedPartsGroup += match[2];
+        }
+
+        bodyString = bodyString.replace(match[0], expandedPartsGroup);
+      }
+    }
+    while (match);
+
+    return bodyString;
+  }
+
+  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
+  //   Example: this.createCreepBody('CCM'); => [CARRY, CARRY, MOVE]
+  private createCreepBody(bodyString: string): BodyPartConstant[] {
+    const body: BodyPartConstant[] = [];
+    let partCounter: number = 1;
+
+    for (const bodyPartString of bodyString) {
+      if (!Number.isNaN(Number(bodyPartString))) {
+        // The `partCounter - 1` is to deal correctly with numbers having more than one digit
+        partCounter = (partCounter - 1) * 10 + parseInt(bodyPartString, 10);
+        continue;
+      }
+
+      // TODO: For this to be sure it's really always defined, `body` should be validated before looping
+      const bodyPart: BodyPartConstant = BodyPartLetters.get(bodyPartString)!;
+
+      // Expand
+      for (let i = 0; i < partCounter; i++) {
+        body.push(bodyPart);
+      }
+
+      partCounter = 1;
+    }
+
+    return body;
   }
 }

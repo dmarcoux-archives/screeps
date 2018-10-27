@@ -93,7 +93,6 @@ export class RoomManager {
     }
   }
 
-  // TODO: Prioritize harvesters and haulers (so put them first in the spawn queue, even if there are other creeps in the spawn queue)
   public spawnCreeps() {
     const sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }> = Memory.rooms[this.room.name].sources;
 
@@ -104,7 +103,7 @@ export class RoomManager {
     // TODO: Check if the harvesters' containers have energy, if so spawn haulers instead
     if (numberOfCreeps === 0) {
       if (Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.BasicHarvester) === -1) {
-        Memory.rooms[this.room.name].spawnQueue.unshift({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
+        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
       }
     }
 
@@ -130,7 +129,7 @@ export class RoomManager {
     }
 
     const numberOfUpgraders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Upgrader).length;
-    if (numberOfUpgraders < 4 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
+    if (numberOfUpgraders < 2 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
       Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
     }
 
