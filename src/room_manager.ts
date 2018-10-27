@@ -43,6 +43,10 @@ export class RoomManager {
     // Update the list of supplied tructures
     Memory.rooms[this.room.name].suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);
 
+    // TODO: Update every X ticks?
+    // Update the list of towers
+    Memory.rooms[this.room.name].towerIds = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
+
     // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
     // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
     if (Memory.rooms[this.room.name].sources.length === 0) {
