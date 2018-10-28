@@ -1,16 +1,3 @@
-import { BasicHarvester } from "roles/basic_harvester";
-
-export const BodyPartLetters: Map<string, BodyPartConstant> = new Map<string, BodyPartConstant>([
-  ['M', MOVE],
-  ['W', WORK],
-  ['C', CARRY],
-  ['A', ATTACK],
-  ['R', RANGED_ATTACK],
-  ['T', TOUGH],
-  ['H', HEAL],
-  ['X', CLAIM]
-]);
-
 // Declared in types.d.ts
 export enum CreepRole {
   BasicHarvester = 'BasicHarvester',
@@ -32,17 +19,15 @@ export const CreepSpawnPriority: CreepRole[] = [
   CreepRole.Supplier
 ]
 
-
-// TODO: Do not hardcore the body parts, but use Room.energyCapacityAvailable to determine what we can spawn and when it can be spawned (when Room.energyAvailable >= body parts cost)
-// The `string[]` contains a body string for each RCL (TODO: Define them... now it's mostly just the same except for harvester which is already defined)
-export const RoleBodies: Map<CreepRole, string[]> = new Map<CreepRole, string[]>([
-  [CreepRole.BasicHarvester, ['W2(CM)', 'W2(CM)', 'W2(CM)', 'W2(CM)', 'W2(CM)', 'W2(CM)', 'W2(CM)', 'W2(CM)']],
-  [CreepRole.Harvester,      ['2WM', '5WM', '5WM', '5WM', '5WM', '5WM', '5WM', '5WM']],
-  [CreepRole.Upgrader,       ['2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM']],
-  [CreepRole.Builder,        ['2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM']],
-  [CreepRole.Repairer,       ['2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM', '2WCM']],
-  [CreepRole.Hauler,         ['3(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)']],
-  [CreepRole.Supplier,       ['3(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)', '6(CM)']],
+// TODO: Adapt number of extra parts for haulers depending on the distance they need to cover
+export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBody>([
+  [CreepRole.BasicHarvester, { core: [WORK, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
+  [CreepRole.Harvester,      { core: [WORK, WORK, MOVE], extra: [WORK], maxExtra: 3 }],
+  [CreepRole.Upgrader,       { core: [WORK, CARRY, CARRY, MOVE, MOVE], extra: [WORK, CARRY, CARRY, MOVE, MOVE], maxExtra: 3 }],
+  [CreepRole.Builder,        { core: [WORK, CARRY, MOVE], extra: [], maxExtra: 0 }],
+  [CreepRole.Repairer,       { core: [WORK, CARRY, MOVE], extra: [], maxExtra: 0 }],
+  [CreepRole.Hauler,         { core: [CARRY, MOVE, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
+  [CreepRole.Supplier,       { core: [CARRY, MOVE, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
 ]);
 
 // Prefix message with Game.time

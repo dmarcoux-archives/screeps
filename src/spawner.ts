@@ -1,11 +1,11 @@
-import { BodyPartLetters, CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
+import { CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
 
 // Spawn creeps
 export class Spawner {
-  private room: string;
+  private room: Room;
   private spawn: string;
 
-  constructor(room: string, spawn: string) {
+  constructor(room: Room, spawn: string) {
     this.room = room;
     this.spawn = spawn;
   }
@@ -13,7 +13,7 @@ export class Spawner {
   // TODO: Spawn creep on demand just in time for a creep which will die (check creep.ticksToLive)
   public spawnCreeps() {
     // Sort the spawn queue based on the spawn priority
-    const spawnQueue: Array<{ creepRole: CreepRole, memory: object }> = Memory.rooms[this.room].spawnQueue.sort((a, b) => CreepSpawnPriority.indexOf(a.creepRole) - CreepSpawnPriority.indexOf(b.creepRole));
+    const spawnQueue: RoomMemorySpawnQueue[] = this.room.memory.spawnQueue.sort((a, b) => CreepSpawnPriority.indexOf(a.creepRole) - CreepSpawnPriority.indexOf(b.creepRole));
 
     if (spawnQueue.length === 0) {
       return
@@ -26,30 +26,30 @@ export class Spawner {
     }
 
     const creepRole: CreepRole = spawnQueue[0].creepRole;
-    const creepBodyString: string = this.expandCreepBody(RoleBodies.get(creepRole)![0]);
-    const creepBody: BodyPartConstant[] = this.createCreepBody(creepBodyString);
-    // TODO: Use creepBodyCost to know which creep can be spawned based on the room's energy and controller level
-    // const creepBodyCost: number = this.creepBodyCost(creepBody);
+    const creepBody: BodyPartConstant[] = this.createCreepBody(RoleBodies.get(creepRole)!);
+    if (creepBody.length === 0) {
+      return;
+    }
+
     const creepName: string = `${creepRole}-${Game.time}`;
     // Add role specific memory to the standard memory
-    const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room, role: creepRole, working: false }) };
+    const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room.name, role: creepRole, working: false }) };
     // Add creep memory to the spawn options (which are empty for now...)
     // TODO: Add energyStructures with spawns being first, then extensions (so extensions don't have to always be supplied)
     const spawnOptions: object = Object.assign(creepMemory, {});
 
     switch (Game.spawns[this.spawn].spawnCreep(creepBody, creepName, spawnOptions)) {
       case OK:
-        logMessage(`${this.room} spawning ${creepRole}`);
+        logMessage(`${this.room.name} spawning ${creepRole}`);
         // The creep is spawning, so we can remove it from the beginning of the queue
         spawnQueue.shift();
         break;
       case ERR_NOT_ENOUGH_ENERGY:
-        logMessage(`${this.room} not enough energy to spawn ${creepRole}`);
+        logMessage(`${this.room.name} not enough energy to spawn ${creepRole}`);
         break;
     }
   }
 
-  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
   private creepBodyCost(bodyParts: BodyPartConstant[]): number {
     let cost: number = 0;
 
@@ -60,55 +60,31 @@ export class Spawner {
     return cost;
   }
 
-  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
-  //   Example: this.expandCreepBody('2(CCM)2(AR)4X'); => 'CCMCCMARAR4X'
-  private expandCreepBody(bodyString: string): string {
-    const regExp: RegExp = /(\d+)\(([a-zA-Z]+)\)/;
-    let match: RegExpExecArray | null;
+  private createCreepBody(body: CreepBody): BodyPartConstant[] {
+    let creepBody: BodyPartConstant[] = body.core;
 
-    do {
-      match = regExp.exec(bodyString);
-
-      if (match) {
-        const times = parseInt(match[1], 10);
-        let expandedPartsGroup: string = "";
-
-        for (let i = 0; i < times; i++) {
-          expandedPartsGroup += match[2];
-        }
-
-        bodyString = bodyString.replace(match[0], expandedPartsGroup);
-      }
+    if (this.creepBodyCost(creepBody) >= this.room.energyAvailable) {
+      // The creep body costs more than the available energy, return an empty array as it's not spawnable
+      return [];
     }
-    while (match);
 
-    return bodyString;
-  }
+    if (body.extra.length === 0 || body.maxExtra <= 0) {
+      return creepBody;
+    }
 
-  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
-  //   Example: this.createCreepBody('CCM'); => [CARRY, CARRY, MOVE]
-  private createCreepBody(bodyString: string): BodyPartConstant[] {
-    const body: BodyPartConstant[] = [];
-    let partCounter: number = 1;
+    let creepBodyWithExtra: BodyPartConstant[] = creepBody;
+    for (let i = 0; i < body.maxExtra; i++) {
+      creepBodyWithExtra = creepBodyWithExtra.concat(body.extra);
 
-    for (const bodyPartString of bodyString) {
-      if (!Number.isNaN(Number(bodyPartString))) {
-        // The `partCounter - 1` is to deal correctly with numbers having more than one digit
-        partCounter = (partCounter - 1) * 10 + parseInt(bodyPartString, 10);
+      if (this.creepBodyCost(creepBodyWithExtra) <= this.room.energyAvailable) {
+        creepBody = creepBodyWithExtra;
         continue;
       }
 
-      // TODO: For this to be sure it's really always defined, `body` should be validated before looping
-      const bodyPart: BodyPartConstant = BodyPartLetters.get(bodyPartString)!;
-
-      // Expand
-      for (let i = 0; i < partCounter; i++) {
-        body.push(bodyPart);
-      }
-
-      partCounter = 1;
+      // The creep body cost is more than the available energy in the room, get out of the loop
+      break;
     }
 
-    return body;
+    return creepBody;
   }
 }

@@ -6,6 +6,13 @@ interface CreepMemory {
   working: boolean;
 }
 
+// A creep's body has core parts (which are always needed) and extra parts (which are added `maxExtra` times when spawned)
+interface CreepBody {
+  core: BodyPartConstant[];
+  extra: BodyPartConstant[];
+  maxExtra: number;
+}
+
 // Defined in globals.ts
 declare enum CreepRole {
   BasicHarvester = 'BasicHarvester',
@@ -17,14 +24,25 @@ declare enum CreepRole {
   Supplier = 'Supplier'
 }
 
+interface RoomMemorySource {
+  id: string;
+  containerPositionX: number;
+  containerPositionY: number;
+}
+
+interface RoomMemorySpawnQueue {
+  creepRole: CreepRole;
+  memory: {};
+}
+
 interface RoomMemory {
   constructionSiteIds: string[];
   damagedStructureIds: string[];
   harvestedSourceIds: string[];
   hauledSourceIds: string[];
-  sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }>;
+  sources: RoomMemorySource[];
   spawnNames: string[];
-  spawnQueue: Array<{ creepRole: CreepRole, memory: {} }>;
+  spawnQueue: RoomMemorySpawnQueue[];
   suppliedStructureIds: string[];
   towerIds: string[];
 }

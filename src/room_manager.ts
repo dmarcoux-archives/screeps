@@ -27,7 +27,7 @@ export class RoomManager {
     }
 
     // TODO: Can only use the first spawn for now...
-    this.spawner = new Spawner(this.room.name, Memory.rooms[this.room.name].spawnNames[0]);
+    this.spawner = new Spawner(this.room, Memory.rooms[this.room.name].spawnNames[0]);
   }
 
   public setup() {
@@ -88,7 +88,7 @@ export class RoomManager {
   }
 
   public spawnCreeps() {
-    const sources: Array<{ id: string, containerPositionX: number, containerPositionY: number }> = Memory.rooms[this.room.name].sources;
+    const sources: RoomMemorySource[] = Memory.rooms[this.room.name].sources;
 
     // TODO: This is not efficient, especially when having more and more creeps... It could perhaps be done in main.ts when we looped through creeps with Game.creeps
     const numberOfCreeps: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name).length;
@@ -123,7 +123,7 @@ export class RoomManager {
     }
 
     const numberOfUpgraders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Upgrader).length;
-    if (numberOfUpgraders < 2 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
+    if (numberOfUpgraders < 3 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
       Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
     }
 
