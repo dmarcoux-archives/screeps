@@ -34,16 +34,10 @@ export class RoomManager {
     // TODO: Update every X ticks?
     // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
     Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
-
-    // TODO: Update every X ticks?
     // Update the list of damaged structures
     Memory.rooms[this.room.name].damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id);
-
-    // TODO: Update every X ticks?
     // Update the list of supplied tructures
     Memory.rooms[this.room.name].suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);
-
-    // TODO: Update every X ticks?
     // Update the list of towers
     Memory.rooms[this.room.name].towerIds = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
 
