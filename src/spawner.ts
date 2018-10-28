@@ -28,10 +28,13 @@ export class Spawner {
     const creepRole: CreepRole = spawnQueue[0].creepRole;
     const creepBodyString: string = this.expandCreepBody(RoleBodies.get(creepRole)![0]);
     const creepBody: BodyPartConstant[] = this.createCreepBody(creepBodyString);
+    // TODO: Use creepBodyCost to know which creep can be spawned based on the room's energy and controller level
+    // const creepBodyCost: number = this.creepBodyCost(creepBody);
     const creepName: string = `${creepRole}-${Game.time}`;
     // Add role specific memory to the standard memory
     const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room, role: creepRole, working: false }) };
     // Add creep memory to the spawn options (which are empty for now...)
+    // TODO: Add energyStructures with spawns being first, then extensions (so extensions don't have to always be supplied)
     const spawnOptions: object = Object.assign(creepMemory, {});
 
     switch (Game.spawns[this.spawn].spawnCreep(creepBody, creepName, spawnOptions)) {
@@ -47,8 +50,18 @@ export class Spawner {
   }
 
   // Credits to Orlet from chat.screeps.com for the original version in JavaScript
-  //   Example 1: this.expandCreepBody('2(CCM)2(AR)'); => 'CCMCCMARAR'
-  //   Example 2: this.expandCreepBody('5(WM)3A'); => 'WMWMWMWMWM3A'
+  private creepBodyCost(bodyParts: BodyPartConstant[]): number {
+    let cost: number = 0;
+
+    for (const bodyPart of bodyParts) {
+      cost += BODYPART_COST[bodyPart];
+    }
+
+    return cost;
+  }
+
+  // Credits to Orlet from chat.screeps.com for the original version in JavaScript
+  //   Example: this.expandCreepBody('2(CCM)2(AR)4X'); => 'CCMCCMARAR4X'
   private expandCreepBody(bodyString: string): string {
     const regExp: RegExp = /(\d+)\(([a-zA-Z]+)\)/;
     let match: RegExpExecArray | null;
