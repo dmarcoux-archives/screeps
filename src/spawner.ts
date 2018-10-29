@@ -1,4 +1,4 @@
-import { CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
+import { BodyPartSpawnOrder, CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
 
 // Spawn creeps
 export class Spawner {
@@ -85,6 +85,8 @@ export class Spawner {
       break;
     }
 
+    // When a creep is hit, it loses body parts based on their order when it was spawned, so it's important to order them
+    creepBody = creepBody.sort((a, b) => BodyPartSpawnOrder.indexOf(a) - BodyPartSpawnOrder.indexOf(b))
     return creepBody;
   }
 }

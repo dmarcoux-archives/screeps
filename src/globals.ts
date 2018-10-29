@@ -19,6 +19,17 @@ export const CreepSpawnPriority: CreepRole[] = [
   CreepRole.Supplier
 ]
 
+export const BodyPartSpawnOrder: BodyPartConstant[] = [
+  TOUGH,
+  CARRY,
+  WORK,
+  CLAIM,
+  MOVE,
+  ATTACK,
+  RANGED_ATTACK,
+  HEAL
+]
+
 // TODO: Adapt number of extra parts for haulers depending on the distance they need to cover
 export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBody>([
   [CreepRole.BasicHarvester, { core: [WORK, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
