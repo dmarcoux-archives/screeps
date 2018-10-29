@@ -21,7 +21,8 @@ declare enum CreepRole {
   Builder = 'Builder',
   Repairer = 'Repairer',
   Hauler = 'Hauler',
-  Supplier = 'Supplier'
+  Supplier = 'Supplier',
+  Attacker = 'Attacker'
 }
 
 interface RoomMemorySource {

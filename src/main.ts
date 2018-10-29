@@ -1,4 +1,5 @@
 import { CreepRole } from 'globals';
+import { Attacker } from 'roles/attacker';
 import { BasicHarvester } from 'roles/basic_harvester';
 import { Builder } from 'roles/builder';
 import { Harvester } from 'roles/harvester';
@@ -73,6 +74,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
         break;
       case CreepRole.Supplier:
         creepWithRole = new Supplier(creep.id);
+        break;
+      case CreepRole.Attacker:
+        creepWithRole = new Attacker(creep.id);
         break;
     }
 

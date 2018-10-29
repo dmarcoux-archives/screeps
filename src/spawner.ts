@@ -31,6 +31,7 @@ export class Spawner {
       return;
     }
 
+    // TODO: Do not use the creepRole in creepName for non-workers (attackers, etc..)
     const creepName: string = `${creepRole}-${Game.time}`;
     // Add role specific memory to the standard memory
     const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room.name, role: creepRole, working: false }) };
