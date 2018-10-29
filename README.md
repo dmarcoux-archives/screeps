@@ -17,7 +17,3 @@ layer](https://github.com/syl20bnr/spacemacs/tree/master/layers/%2Blang/typescri
 - Compiler: `npm install -g typescript`
 - Linting: `npm install -g tslint`
 - Formatter: `npm install -g typescript-formatter`
-
-#### TODOs
-
-- Use [typed-screeps](https://github.com/screepers/typed-screeps)
