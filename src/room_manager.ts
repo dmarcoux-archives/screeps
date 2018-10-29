@@ -50,9 +50,8 @@ export class RoomManager {
 
       for (const source of sources) {
         // TODO: Fill RoomMemorySource.pathLengthToFromDrop to adjust haulers for that source
-        // TODO: Use type
         // TODO: Improve this... just too many ifs
-        const builtContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
+        const builtContainer: StructureContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
         let pathSteps: PathStep[];
         if (builtContainer) {
           Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y });
@@ -60,7 +59,7 @@ export class RoomManager {
           pathSteps.pop(); // The last path step is the container, nothing to build there
         }
         else {
-          const container = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
+          const container: ConstructionSite = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
           if (container) {
             Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y });
             pathSteps = spawn.pos.findPathTo(container.pos);
