@@ -49,21 +49,20 @@ export class RoomManager {
       const sources: Source[] = this.room.find(FIND_SOURCES)
 
       for (const source of sources) {
-        // TODO: Fill RoomMemorySource.pathLengthToFromDrop to adjust haulers for that source
         // TODO: Improve this... just too many ifs
         const builtContainer: StructureContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
         let pathSteps: PathStep[];
         if (builtContainer) {
-          Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y });
           pathSteps = spawn.pos.findPathTo(builtContainer.pos);
           pathSteps.pop(); // The last path step is the container, nothing to build there
+          Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y, pathLengthToFromDrop: pathSteps.length });
         }
         else {
           const container: ConstructionSite = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
           if (container) {
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y });
             pathSteps = spawn.pos.findPathTo(container.pos);
             pathSteps.pop(); // The last path step is the container, nothing to build there
+            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y, pathLengthToFromDrop: pathSteps.length });
           }
           else {
             pathSteps = spawn.pos.findPathTo(source.pos);
@@ -72,7 +71,7 @@ export class RoomManager {
             pathSteps.pop(); // The last path step is the source, nothing to build there
             const containerPathStep: PathStep = pathSteps.pop()!;
 
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y })
+            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y, pathLengthToFromDrop: pathSteps.length })
             const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
             this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
           }
@@ -115,7 +114,7 @@ export class RoomManager {
     }
 
     // Are there enough haulers, so at least one hauler per source?
-    // TODO: Adapt the number of haulers based on the path to cover between the source and the drop point
+    // TODO: Adapt the number of haulers based on the path to cover between the source and the drop point (RoomMemorySource.pathLengthToFromDrop)
     const hauledSourceIds: string[] = Memory.rooms[this.room.name].hauledSourceIds;
     if (hauledSourceIds.length < sources.length) {
       const sourceWithoutHauler: string = sources.filter((source) => !hauledSourceIds.includes(source.id))[0].id;

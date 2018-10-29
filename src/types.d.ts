@@ -28,7 +28,7 @@ interface RoomMemorySource {
   id: string;
   containerPositionX: number;
   containerPositionY: number;
-  // pathLengthToFromDrop: number;
+  pathLengthToFromDrop: number;
 }
 
 interface RoomMemorySpawnQueue {
