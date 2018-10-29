@@ -1,12 +1,5 @@
 import { CreepRole } from 'globals';
-import { Attacker } from 'roles/attacker';
-import { BasicHarvester } from 'roles/basic_harvester';
-import { Builder } from 'roles/builder';
-import { Harvester } from 'roles/harvester';
-import { Hauler } from 'roles/hauler';
-import { Repairer } from 'roles/repairer';
-import { Supplier } from 'roles/supplier';
-import { Upgrader } from 'roles/upgrader';
+import { Attacker, BasicHarvester, Builder, Harvester, Hauler, Repairer, Supplier, Upgrader } from 'roles';
 import { RoomManager } from 'room_manager';
 import { ErrorMapper } from 'utils/ErrorMapper';
 
