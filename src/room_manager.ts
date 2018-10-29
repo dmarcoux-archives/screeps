@@ -49,6 +49,7 @@ export class RoomManager {
       const sources: Source[] = this.room.find(FIND_SOURCES)
 
       for (const source of sources) {
+        // TODO: Fill RoomMemorySource.pathLengthToFromDrop to adjust haulers for that source
         // TODO: Use type
         // TODO: Improve this... just too many ifs
         const builtContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
@@ -114,7 +115,8 @@ export class RoomManager {
       Memory.rooms[this.room.name].harvestedSourceIds.push(sourceWithoutHarvester.id);
     }
 
-    // Are there enough haulers, so one hauler per source? (TODO: Adapt the number of haulers based on the distance to cover between the source and the drop point)
+    // Are there enough haulers, so at least one hauler per source?
+    // TODO: Adapt the number of haulers based on the path to cover between the source and the drop point
     const hauledSourceIds: string[] = Memory.rooms[this.room.name].hauledSourceIds;
     if (hauledSourceIds.length < sources.length) {
       const sourceWithoutHauler: string = sources.filter((source) => !hauledSourceIds.includes(source.id))[0].id;
