@@ -7,7 +7,8 @@ export enum CreepRole {
   Repairer = 'Repairer',
   Hauler = 'Hauler',
   Supplier = 'Supplier',
-  Attacker = 'Attacker'
+  Attacker = 'Attacker',
+  Decoy = 'Decoy'
 }
 
 export const CreepSpawnPriority: CreepRole[] = [
@@ -18,7 +19,8 @@ export const CreepSpawnPriority: CreepRole[] = [
   CreepRole.Builder,
   CreepRole.Repairer,
   CreepRole.Supplier,
-  CreepRole.Attacker
+  CreepRole.Attacker,
+  CreepRole.Decoy
 ]
 
 export const BodyPartSpawnOrder: BodyPartConstant[] = [
@@ -42,6 +44,7 @@ export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBod
   [CreepRole.Hauler,         { core: [CARRY, MOVE, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
   [CreepRole.Supplier,       { core: [CARRY, MOVE, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
   [CreepRole.Attacker,       { core: [TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, ATTACK, ATTACK], extra: [TOUGH, TOUGH, MOVE, ATTACK], maxExtra: 4 }],
+  [CreepRole.Decoy,          { core: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], extra: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], maxExtra: 1 }]
 ]);
 
 // Prefix message with Game.time

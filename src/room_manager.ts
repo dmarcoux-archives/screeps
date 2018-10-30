@@ -154,6 +154,12 @@ export class RoomManager {
       }
     }
 
+    // TODO: Check when a decoy flag is placed, then read data from it to know how many decoys to spawn and where to send them
+    const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
+    if (numberOfDecoys < 0 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
+      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
+    }
+
     this.spawner.spawnCreeps();
   }
 

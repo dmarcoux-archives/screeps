@@ -31,8 +31,15 @@ export class Spawner {
       return;
     }
 
-    // TODO: Do not use the creepRole in creepName for non-workers (attackers, etc..)
-    const creepName: string = `${creepRole}-${Game.time}`;
+    // Name creeps based on their role only if they are workers
+    let creepName: string;
+    if ([CreepRole.Attacker, CreepRole.Decoy].includes(creepRole)) {
+      creepName = `vok5-${Game.time}`;
+    }
+    else {
+      creepName = `${creepRole}-${Game.time}`;
+    }
+
     // Add role specific memory to the standard memory
     const creepMemory: object = { memory: Object.assign(spawnQueue[0].memory, { room: this.room.name, role: creepRole, working: false }) };
     // Add creep memory to the spawn options (which are empty for now...)

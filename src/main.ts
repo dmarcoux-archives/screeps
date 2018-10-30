@@ -1,5 +1,5 @@
 import { CreepRole } from 'globals';
-import { Attacker, BasicHarvester, Builder, Harvester, Hauler, Repairer, Supplier, Upgrader } from 'roles';
+import { Attacker, BasicHarvester, Builder, Decoy, Harvester, Hauler, Repairer, Supplier, Upgrader } from 'roles';
 import { RoomManager } from 'room_manager';
 import { ErrorMapper } from 'utils/ErrorMapper';
 
@@ -70,6 +70,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
         break;
       case CreepRole.Attacker:
         creepWithRole = new Attacker(creep.id);
+        break;
+      case CreepRole.Decoy:
+        creepWithRole = new Decoy(creep.id);
         break;
     }
 

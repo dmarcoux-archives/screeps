@@ -1,6 +1,7 @@
 export { Attacker } from './attacker';
 export { BasicHarvester } from './basic_harvester';
 export { Builder } from './builder';
+export { Decoy } from './decoy';
 export { Harvester } from './harvester';
 export { Hauler } from './hauler';
 export { Repairer } from './repairer';
