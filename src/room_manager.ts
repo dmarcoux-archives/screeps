@@ -13,7 +13,7 @@ export class RoomManager {
     this.room = room;
 
     // TODO: this.room.memory needs to be manually deleted in-game to reset (whenever I add/change keys)
-    if (!this.room.memory) {
+    if (Object.keys(this.room.memory).length === 0) {
       // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
       // TODO: Refresh spawnNames when spawns are built/destroyed
       this.room.memory = {
