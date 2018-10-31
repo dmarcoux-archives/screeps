@@ -16,6 +16,7 @@ export class ConstructionAutomater {
     if (this.room.memory.sources.length === 0) {
       // TODO: Support multi-spawns
       const spawn: StructureSpawn = Game.spawns[this.room.memory.spawnNames[0]];
+      const position: RoomPosition = (spawn || this.room.find(FIND_MY_CONSTRUCTION_SITES, { filter: (c) => c.structureType === STRUCTURE_SPAWN })[0]).pos;
       const sources: Source[] = this.room.find(FIND_SOURCES)
 
       for (const source of sources) {
@@ -23,19 +24,19 @@ export class ConstructionAutomater {
         const builtContainer: StructureContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
         let pathSteps: PathStep[];
         if (builtContainer) {
-          pathSteps = spawn.pos.findPathTo(builtContainer.pos);
+          pathSteps = position.findPathTo(builtContainer.pos);
           pathSteps.pop(); // The last path step is the container, nothing to construct there
           this.room.memory.sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y, pathLengthToFromDrop: pathSteps.length });
         }
         else {
           const container: ConstructionSite = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
           if (container) {
-            pathSteps = spawn.pos.findPathTo(container.pos);
+            pathSteps = position.findPathTo(container.pos);
             pathSteps.pop(); // The last path step is the container, nothing to construct there
             this.room.memory.sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y, pathLengthToFromDrop: pathSteps.length });
           }
           else {
-            pathSteps = spawn.pos.findPathTo(source.pos);
+            pathSteps = position.findPathTo(source.pos);
 
             // Construct container
             pathSteps.pop(); // The last path step is the source, nothing to construct there

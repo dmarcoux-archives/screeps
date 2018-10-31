@@ -46,6 +46,11 @@ export class RoomManager {
   }
 
   public spawnCreeps() {
+    // Don't spawn creeps if the room doesn't have a spawn yet
+    if (this.room.memory.spawnNames.length === 0) {
+      return;
+    }
+
     const sources: RoomMemorySource[] = this.room.memory.sources;
 
     // TODO: This is not efficient, especially when having more and more creeps... It could perhaps be done in main.ts when we looped through creeps with Game.creeps
@@ -117,6 +122,16 @@ export class RoomManager {
     const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
     if (numberOfDecoys < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
       this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
+    }
+
+    // Spawn claimers if there is a claim flag
+    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
+    const claimFlag: Flag = Game.flags.Claim;
+    if (claimFlag) {
+      const numberOfClaimers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Claimer).length;
+      if (numberOfClaimers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Claimer) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Claimer, memory: {} });
+      }
     }
 
     this.spawner.spawnCreeps();

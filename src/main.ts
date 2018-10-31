@@ -1,5 +1,5 @@
 import { CreepRole } from 'globals';
-import { Attacker, BasicHarvester, Builder, Decoy, Harvester, Hauler, Repairer, Supplier, Upgrader } from 'roles';
+import { Attacker, BasicHarvester, Builder, Claimer, Decoy, Harvester, Hauler, Repairer, Supplier, Upgrader } from 'roles';
 import { RoomManager } from 'room_manager';
 import { ErrorMapper } from 'utils/ErrorMapper';
 
@@ -35,10 +35,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
   }
 
   for (const roomName in Game.rooms) {
-    const room: RoomManager = new RoomManager(Game.rooms[roomName]);
-    room.setup();
-    room.spawnCreeps();
-    room.defend();
+    const room: Room = Game.rooms[roomName];
+
+    if (!room.controller || !room.controller.my) {
+      // Some of my creeps are in a room I don't control, do not create a room manager for this room
+      continue;
+    }
+
+    const roomManager: RoomManager = new RoomManager(room);
+    roomManager.setup();
+    roomManager.spawnCreeps();
+    roomManager.defend();
   }
 
   // Make creeps work
@@ -74,6 +81,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
         break;
       case CreepRole.Decoy:
         creepWithRole = new Decoy(creep.id);
+        break;
+      case CreepRole.Claimer:
+        creepWithRole = new Claimer(creep.id);
         break;
     }
 
