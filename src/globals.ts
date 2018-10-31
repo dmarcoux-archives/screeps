@@ -48,6 +48,7 @@ export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBod
 ]);
 
 // Prefix message with Game.time
+// TODO: Enable/Disable log messages for specific rooms only if there is a log flag in that room
 export function logMessage(message: string){
   console.log(`${Game.time} | ${message}`);
 }
