@@ -12,6 +12,12 @@ export class Builder extends Creep {
       const constructionSiteIds: string[] = Memory.rooms[this.memory.room].constructionSiteIds;
 
       if (constructionSiteIds.length === 0) {
+        // TODO: This is a naive approach to prevent creeps from blocking others
+        const idleFlag: Flag = Game.flags['Idle'];
+        if (idleFlag) {
+          this.moveTo(idleFlag.pos);
+        }
+
         return;
       }
 

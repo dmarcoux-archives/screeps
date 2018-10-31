@@ -11,6 +11,12 @@ export class Repairer extends Creep {
       const damagedStructureIds: string[] = Memory.rooms[this.memory.room].damagedStructureIds;
 
       if (damagedStructureIds.length === 0) {
+        // TODO: This is a naive approach to prevent creeps from blocking others
+        const idleFlag: Flag = Game.flags['Idle'];
+        if (idleFlag) {
+          this.moveTo(idleFlag.pos);
+        }
+
         return;
       }
 
