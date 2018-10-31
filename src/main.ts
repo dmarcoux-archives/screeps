@@ -13,6 +13,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
       continue;
     }
 
+    // Some creep roles rely on room memory and it needs to be deleted too before deleting the creep memory
     const creepMemory: CreepMemory = Memory.creeps[creepName];
     switch (creepMemory.role) {
       case CreepRole.Harvester:
