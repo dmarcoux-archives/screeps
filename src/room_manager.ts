@@ -1,12 +1,15 @@
+import { ConstructionAutomater } from 'construction_automater';
 import { CreepRole, logMessage } from 'globals';
 import { Spawner } from 'spawner';
 
 export class RoomManager {
+  private constructionAutomater: ConstructionAutomater;
   private room: Room;
   private spawner: Spawner;
 
   // TODO: For now, everything is there while I moved the code from main. Separate this
   constructor(room: Room) {
+    this.constructionAutomater = new ConstructionAutomater(room);
     this.room = room;
 
     // TODO: Memory.rooms[this.room.name] needs to be manually deleted in-game to reset (whenever I add/change keys)
@@ -41,49 +44,7 @@ export class RoomManager {
     // Update the list of towers
     Memory.rooms[this.room.name].towerIds = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
 
-    // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
-    // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
-    if (Memory.rooms[this.room.name].sources.length === 0) {
-      // TODO: Support multi-spawns
-      const spawn: StructureSpawn = Game.spawns[Memory.rooms[this.room.name].spawnNames[0]];
-      const sources: Source[] = this.room.find(FIND_SOURCES)
-
-      for (const source of sources) {
-        // TODO: Improve this... just too many ifs
-        const builtContainer: StructureContainer = source.pos.findInRange<StructureContainer>(FIND_STRUCTURES, 1, { filter: (structure) => structure.structureType === STRUCTURE_CONTAINER })[0];
-        let pathSteps: PathStep[];
-        if (builtContainer) {
-          pathSteps = spawn.pos.findPathTo(builtContainer.pos);
-          pathSteps.pop(); // The last path step is the container, nothing to build there
-          Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y, pathLengthToFromDrop: pathSteps.length });
-        }
-        else {
-          const container: ConstructionSite = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
-          if (container) {
-            pathSteps = spawn.pos.findPathTo(container.pos);
-            pathSteps.pop(); // The last path step is the container, nothing to build there
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y, pathLengthToFromDrop: pathSteps.length });
-          }
-          else {
-            pathSteps = spawn.pos.findPathTo(source.pos);
-
-            // Build container
-            pathSteps.pop(); // The last path step is the source, nothing to build there
-            const containerPathStep: PathStep = pathSteps.pop()!;
-
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y, pathLengthToFromDrop: pathSteps.length })
-            const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
-            this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
-          }
-        }
-
-        // Build roads
-        for (const roadPathStep of pathSteps) {
-          const roadPosition: RoomPosition = new RoomPosition(roadPathStep.x, roadPathStep.y, this.room.name);
-          this.room.createConstructionSite(roadPosition, STRUCTURE_ROAD);
-        }
-      }
-    }
+    this.constructionAutomater.setupSources();
   }
 
   public spawnCreeps() {
