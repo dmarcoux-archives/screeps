@@ -9,7 +9,7 @@ export class Builder extends Creep {
   public work() {
     if (this.memory.working) {
       // TODO: Maybe instead of closest, find the construction site closest to being completed (so builders focus on one construction site at a time)
-      const constructionSiteIds: string[] = Memory.rooms[this.room.name].constructionSiteIds;
+      const constructionSiteIds: string[] = Memory.rooms[this.memory.room].constructionSiteIds;
 
       if (constructionSiteIds.length === 0) {
         return;
@@ -19,7 +19,7 @@ export class Builder extends Creep {
 
       if (constructionSite === null) {
         // Remove the construction site id from the memory
-        Memory.rooms[this.room.name].constructionSiteIds.splice(0, 1);
+        Memory.rooms[this.memory.room].constructionSiteIds.splice(0, 1);
 
         return;
       }

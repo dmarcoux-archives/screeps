@@ -12,9 +12,9 @@ export class ConstructionAutomater {
   // Store sources in memory and plan construction sites for them (roads between spawn and source, and container to drop resources)
   public setupSources() {
     // TODO: Rebuid roads/containers if they get destroyed, maybe run this every X ticks
-    if (Memory.rooms[this.room.name].sources.length === 0) {
+    if (this.room.memory.sources.length === 0) {
       // TODO: Support multi-spawns
-      const spawn: StructureSpawn = Game.spawns[Memory.rooms[this.room.name].spawnNames[0]];
+      const spawn: StructureSpawn = Game.spawns[this.room.memory.spawnNames[0]];
       const sources: Source[] = this.room.find(FIND_SOURCES)
 
       for (const source of sources) {
@@ -24,14 +24,14 @@ export class ConstructionAutomater {
         if (builtContainer) {
           pathSteps = spawn.pos.findPathTo(builtContainer.pos);
           pathSteps.pop(); // The last path step is the container, nothing to construct there
-          Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y, pathLengthToFromDrop: pathSteps.length });
+          this.room.memory.sources.push({ id: source.id, containerPositionX: builtContainer.pos.x, containerPositionY: builtContainer.pos.y, pathLengthToFromDrop: pathSteps.length });
         }
         else {
           const container: ConstructionSite = source.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 1, { filter: (c) => c.structureType === STRUCTURE_CONTAINER })[0];
           if (container) {
             pathSteps = spawn.pos.findPathTo(container.pos);
             pathSteps.pop(); // The last path step is the container, nothing to construct there
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y, pathLengthToFromDrop: pathSteps.length });
+            this.room.memory.sources.push({ id: source.id, containerPositionX: container.pos.x, containerPositionY: container.pos.y, pathLengthToFromDrop: pathSteps.length });
           }
           else {
             pathSteps = spawn.pos.findPathTo(source.pos);
@@ -40,7 +40,7 @@ export class ConstructionAutomater {
             pathSteps.pop(); // The last path step is the source, nothing to construct there
             const containerPathStep: PathStep = pathSteps.pop()!;
 
-            Memory.rooms[this.room.name].sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y, pathLengthToFromDrop: pathSteps.length })
+            this.room.memory.sources.push({ id: source.id, containerPositionX: containerPathStep.x, containerPositionY: containerPathStep.y, pathLengthToFromDrop: pathSteps.length })
             const containerPosition: RoomPosition = new RoomPosition(containerPathStep.x, containerPathStep.y, this.room.name);
             this.room.createConstructionSite(containerPosition, STRUCTURE_CONTAINER);
           }

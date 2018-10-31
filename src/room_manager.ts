@@ -12,11 +12,11 @@ export class RoomManager {
     this.constructionAutomater = new ConstructionAutomater(room);
     this.room = room;
 
-    // TODO: Memory.rooms[this.room.name] needs to be manually deleted in-game to reset (whenever I add/change keys)
-    if (!(Memory.rooms[this.room.name])) {
+    // TODO: this.room.memory needs to be manually deleted in-game to reset (whenever I add/change keys)
+    if (!this.room.memory) {
       // TODO: Refresh towerIds when towers are built (how to do that?? maybe with the event log... but this must be CPU expensive)
       // TODO: Refresh spawnNames when spawns are built/destroyed
-      Memory.rooms[this.room.name] = {
+      this.room.memory = {
         constructionSiteIds: [],
         damagedStructureIds: this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id),
         harvestedSourceIds: _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Harvester).map((memory) => memory.sourceId),
@@ -30,25 +30,23 @@ export class RoomManager {
     }
 
     // TODO: Can only use the first spawn for now...
-    this.spawner = new Spawner(this.room, Memory.rooms[this.room.name].spawnNames[0]);
+    this.spawner = new Spawner(this.room, this.room.memory.spawnNames[0]);
   }
 
   public setup() {
     // TODO: Update every X ticks?
     // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
-    Memory.rooms[this.room.name].constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
-    // Update the list of damaged structures
-    Memory.rooms[this.room.name].damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id);
-    // Update the list of supplied tructures
-    Memory.rooms[this.room.name].suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);
-    // Update the list of towers
-    Memory.rooms[this.room.name].towerIds = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
+    this.room.memory.constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
+    // Update the list of damaged/supplied structures and towers
+    this.room.memory.damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id);
+    this.room.memory.suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);
+    this.room.memory.towerIds = this.room.find<StructureTower>(FIND_MY_STRUCTURES, { filter: (structure) => structure.structureType === STRUCTURE_TOWER }).map((tower) => tower.id)
 
     this.constructionAutomater.setupSources();
   }
 
   public spawnCreeps() {
-    const sources: RoomMemorySource[] = Memory.rooms[this.room.name].sources;
+    const sources: RoomMemorySource[] = this.room.memory.sources;
 
     // TODO: This is not efficient, especially when having more and more creeps... It could perhaps be done in main.ts when we looped through creeps with Game.creeps
     const numberOfCreeps: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name).length;
@@ -56,69 +54,69 @@ export class RoomManager {
     // Without creeps, we need one basic harvester to start
     // TODO: Check if the harvesters' containers have energy, if so spawn haulers instead
     if (numberOfCreeps === 0) {
-      if (Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.BasicHarvester) === -1) {
-        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
+      if (this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.BasicHarvester) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.BasicHarvester, memory: { sourceId: sources[0].id } });
       }
     }
 
     // Are there enough harvesters, so one harvester per source?
-    const harvestedSourceIds: string[] = Memory.rooms[this.room.name].harvestedSourceIds;
+    const harvestedSourceIds: string[] = this.room.memory.harvestedSourceIds;
     if (harvestedSourceIds.length < sources.length) {
       const sourceWithoutHarvester: { id: string, containerPositionX: number, containerPositionY: number } = sources.filter((source) => !harvestedSourceIds.includes(source.id))[0];
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Harvester,
+      this.room.memory.spawnQueue.push({ creepRole: CreepRole.Harvester,
                                                      memory: {
                                                        moveTo: { x: sourceWithoutHarvester.containerPositionX, y: sourceWithoutHarvester.containerPositionY },
                                                        sourceId: sourceWithoutHarvester.id
                                                      }
                                                    });
-      Memory.rooms[this.room.name].harvestedSourceIds.push(sourceWithoutHarvester.id);
+      this.room.memory.harvestedSourceIds.push(sourceWithoutHarvester.id);
     }
 
     // Are there enough haulers, so at least one hauler per source?
     // TODO: Adapt the number of haulers based on the path to cover between the source and the drop point (RoomMemorySource.pathLengthToFromDrop)
-    const hauledSourceIds: string[] = Memory.rooms[this.room.name].hauledSourceIds;
+    const hauledSourceIds: string[] = this.room.memory.hauledSourceIds;
     if (hauledSourceIds.length < sources.length) {
       const sourceWithoutHauler: string = sources.filter((source) => !hauledSourceIds.includes(source.id))[0].id;
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Hauler, memory: { sourceId: sourceWithoutHauler } });
-      Memory.rooms[this.room.name].hauledSourceIds.push(sourceWithoutHauler);
+      this.room.memory.spawnQueue.push({ creepRole: CreepRole.Hauler, memory: { sourceId: sourceWithoutHauler } });
+      this.room.memory.hauledSourceIds.push(sourceWithoutHauler);
     }
 
     const numberOfUpgraders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Upgrader).length;
-    if (numberOfUpgraders < 3 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
+    if (numberOfUpgraders < 3 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
+      this.room.memory.spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
     }
 
     // Spawn builders if there are construction sites
-    const constructionSiteIds: string[] = Memory.rooms[this.room.name].constructionSiteIds;
+    const constructionSiteIds: string[] = this.room.memory.constructionSiteIds;
     if (constructionSiteIds.length > 0) {
       const numberOfBuilders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Builder).length;
-      if (numberOfBuilders < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
-        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Builder, memory: {} });
+      if (numberOfBuilders < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Builder) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Builder, memory: {} });
       }
     }
 
     // Spawn repairers if there are damaged structures to repair
-    const damagedStructureIds: string[] = Memory.rooms[this.room.name].damagedStructureIds;
+    const damagedStructureIds: string[] = this.room.memory.damagedStructureIds;
     if (damagedStructureIds.length > 0) {
       const numberOfRepairers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Repairer).length;
-      if (numberOfRepairers < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Repairer) === -1) {
-        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Repairer, memory: {} });
+      if (numberOfRepairers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Repairer) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Repairer, memory: {} });
       }
     }
 
     // Spawn suppliers if there are supplied structures
-    const suppliedStructureIds: string[] = Memory.rooms[this.room.name].suppliedStructureIds;
+    const suppliedStructureIds: string[] = this.room.memory.suppliedStructureIds;
     if (suppliedStructureIds.length > 0) {
       const numberOfSuppliers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Supplier).length;
-      if (numberOfSuppliers < 1 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Supplier) === -1) {
-        Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Supplier, memory: {} });
+      if (numberOfSuppliers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Supplier) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Supplier, memory: {} });
       }
     }
 
     // TODO: Check when a decoy flag is placed, then read data from it to know how many decoys to spawn and where to send them
     const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
-    if (numberOfDecoys < 0 && Memory.rooms[this.room.name].spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
-      Memory.rooms[this.room.name].spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
+    if (numberOfDecoys < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
+      this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
     }
 
     this.spawner.spawnCreeps();
@@ -127,7 +125,7 @@ export class RoomManager {
   // Defend the room with towers, creeps if in alarm mode (TODO)
   // TODO: List of enemies in room's memory so towers can focus on one. Also avoid running this code if no enemies are present
   public defend() {
-    const towerIds: string[] = Memory.rooms[this.room.name].towerIds;
+    const towerIds: string[] = this.room.memory.towerIds;
 
     if (towerIds.length === 0) {
       return;
@@ -138,8 +136,8 @@ export class RoomManager {
 
       if (tower === null) {
         // Delete memory of missing/destroyed tower
-        const towerIdIndex: number = Memory.rooms[this.room.name].towerIds.indexOf(towerId);
-        Memory.rooms[this.room.name].towerIds.splice(towerIdIndex, 1);
+        const towerIdIndex: number = this.room.memory.towerIds.indexOf(towerId);
+        this.room.memory.towerIds.splice(towerIdIndex, 1);
 
         // Nothing more to do, go to next tower
         continue;
