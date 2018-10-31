@@ -7,8 +7,7 @@ export class Decoy extends Creep {
   }
 
   public work() {
-    // TODO: Don't hardcode flag name, store it in memory
-    const decoyFlag: Flag = Game.flags['Decoy'];
+    const decoyFlag: Flag = Game.flags.Decoy;
     if (!decoyFlag) {
       return;
     }

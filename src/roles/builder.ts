@@ -13,7 +13,7 @@ export class Builder extends Creep {
 
       if (constructionSiteIds.length === 0) {
         // TODO: This is a naive approach to prevent creeps from blocking others
-        const idleFlag: Flag = Game.flags['Idle'];
+        const idleFlag: Flag = Game.flags.Idle;
         if (idleFlag) {
           this.moveTo(idleFlag.pos);
         }
