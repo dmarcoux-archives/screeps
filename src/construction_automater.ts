@@ -1,3 +1,4 @@
+// TODO: Construct roads to minerals and their extractor
 // TODO: Construct roads between sources and room controller
 // TODO: Construct walls/ramparts to block room entrances/exits and around controller
 // TODO: Construct towers (one next to spawn, others...???)
