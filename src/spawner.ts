@@ -33,7 +33,7 @@ export class Spawner {
 
     // Name creeps based on their role only if they are workers
     let creepName: string;
-    if ([CreepRole.Attacker, CreepRole.Decoy].includes(creepRole)) {
+    if ([CreepRole.Attacker, CreepRole.Decoy, CreepRole.Defender].includes(creepRole)) {
       creepName = `vok5-${Game.time}`;
     }
     else {
