@@ -124,7 +124,7 @@ export class RoomManager {
     const decoyFlag: Flag = Game.flags.Decoy;
     if (decoyFlag) {
       const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
-      if (numberOfDecoys < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
+      if (numberOfDecoys < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
       }
     }
