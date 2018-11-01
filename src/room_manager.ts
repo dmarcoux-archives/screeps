@@ -118,10 +118,15 @@ export class RoomManager {
       }
     }
 
+    // Spawn decoys if there is a decoy flag
+    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
     // TODO: Check when a decoy flag is placed, then read data from it to know how many decoys to spawn and where to send them
-    const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
-    if (numberOfDecoys < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
-      this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
+    const decoyFlag: Flag = Game.flags.Decoy;
+    if (decoyFlag) {
+      const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
+      if (numberOfDecoys < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
+      }
     }
 
     // Spawn claimers if there is a claim flag
