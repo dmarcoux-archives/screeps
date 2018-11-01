@@ -40,7 +40,7 @@ export const BodyPartSpawnOrder: BodyPartConstant[] = [
 export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBody>([
   [CreepRole.BasicHarvester, { core: [WORK, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
   [CreepRole.Harvester,      { core: [WORK, WORK, MOVE], extra: [WORK], maxExtra: 3 }],
-  [CreepRole.Upgrader,       { core: [WORK, CARRY, CARRY, MOVE, MOVE], extra: [WORK, CARRY, CARRY, MOVE, MOVE], maxExtra: 3 }],
+  [CreepRole.Upgrader,       { core: [WORK, CARRY, CARRY, MOVE, MOVE], extra: [WORK, CARRY, MOVE], maxExtra: 4 }],
   [CreepRole.Builder,        { core: [WORK, CARRY, MOVE], extra: [], maxExtra: 0 }],
   [CreepRole.Repairer,       { core: [WORK, CARRY, MOVE], extra: [], maxExtra: 0 }],
   [CreepRole.Hauler,         { core: [CARRY, MOVE, CARRY, MOVE], extra: [CARRY, MOVE], maxExtra: 1 }],
