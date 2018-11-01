@@ -10,7 +10,8 @@ export enum CreepRole {
   Attacker = 'Attacker',
   Decoy = 'Decoy',
   Claimer = 'Claimer',
-  Defender = 'Defender'
+  Defender = 'Defender',
+  RemoteBuilder = 'RemoteBuilder'
 }
 
 export const CreepSpawnPriority: CreepRole[] = [
@@ -24,7 +25,8 @@ export const CreepSpawnPriority: CreepRole[] = [
   CreepRole.Attacker,
   CreepRole.Decoy,
   CreepRole.Claimer,
-  CreepRole.Defender
+  CreepRole.Defender,
+  CreepRole.RemoteBuilder
 ]
 
 export const BodyPartSpawnOrder: BodyPartConstant[] = [
@@ -50,7 +52,8 @@ export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBod
   [CreepRole.Attacker,       { core: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, ATTACK, ATTACK], extra: [MOVE, MOVE, ATTACK, ATTACK], maxExtra: 3 }],
   [CreepRole.Decoy,          { core: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], extra: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], maxExtra: 1 }],
   [CreepRole.Claimer,        { core: [MOVE, CLAIM], extra: [], maxExtra: 0 }],
-  [CreepRole.Defender,       { core: [TOUGH, TOUGH, MOVE, MOVE, ATTACK], extra: [MOVE, ATTACK], maxExtra: 1 }]
+  [CreepRole.Defender,       { core: [TOUGH, TOUGH, MOVE, MOVE, ATTACK], extra: [MOVE, ATTACK], maxExtra: 1 }],
+  [CreepRole.RemoteBuilder,  { core: [], extra: [], maxExtra: 0 }]
 ]);
 
 // Prefix message with Game.time

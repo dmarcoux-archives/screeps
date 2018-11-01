@@ -6,6 +6,7 @@ export { Decoy } from './decoy';
 export { Defender } from './defender';
 export { Harvester } from './harvester';
 export { Hauler } from './hauler';
+export { RemoteBuilder } from './remote_builder';
 export { Repairer } from './repairer';
 export { Supplier } from './supplier';
 export { Upgrader } from './upgrader';

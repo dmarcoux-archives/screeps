@@ -30,9 +30,9 @@ export class Claimer extends Creep {
         }
 
         this.room.createConstructionSite(claimFlag.pos, STRUCTURE_SPAWN);
+        // TODO: Place flag to call squad of miners and builders to build the spawn and other structures in this room
         claimFlag.remove();
 
-        // TODO: Call in a squad of miners and builders to build the spawn and other structures
         break;
       case ERR_INVALID_TARGET:
         // The controller is claimed/reserved by another player, so attack it!!!
