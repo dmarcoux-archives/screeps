@@ -7,20 +7,20 @@ export class Attacker extends Creep {
   }
 
   public work() {
-    // TODO: Code this
-    const attackerFlag: Flag = Game.flags.Attacker;
-    if (!attackerFlag) {
+    const attackFlag: Flag = Game.flags.Attack;
+
+    if (!attackFlag) {
       return;
     }
 
-    // attackerFlag.pos always work, no matter where the creep is (unlike attackerFlag.room)
-    if (this.room.name !== attackerFlag.pos.roomName) {
-      this.moveTo(attackerFlag.pos);
+    // attackFlag.pos always work, no matter where the creep is (unlike attackFlag.room)
+    if (this.room.name !== attackFlag.pos.roomName) {
+      this.moveTo(attackFlag.pos);
       return;
     }
 
     // Find target at flag's position and attack it
-    const hostileStructure: Structure = attackerFlag.pos.lookFor(LOOK_STRUCTURES)[0];
+    const hostileStructure: Structure = attackFlag.pos.lookFor(LOOK_STRUCTURES)[0];
 
     if (hostileStructure) {
       switch (this.attack(hostileStructure)) {
