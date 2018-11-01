@@ -34,6 +34,9 @@ export class Claimer extends Creep {
 
         // TODO: Call in a squad of miners and builders to build the spawn and other structures
         break;
+      case ERR_INVALID_TARGET:
+        // The controller is claimed/reserved by another player, so attack it!!!
+        this.attackController(this.room.controller!);
       case ERR_NOT_IN_RANGE:
         this.moveTo(this.room.controller!.pos);
         break;
