@@ -6,6 +6,7 @@ export class Attacker extends Creep {
     super(id);
   }
 
+  // TODO: Do not depend on the presence of the attackFlag to attack hostile structures/creeps in the room where this creep is
   public work() {
     const attackFlag: Flag = Game.flags.Attack;
 
@@ -19,8 +20,7 @@ export class Attacker extends Creep {
       return;
     }
 
-    // Find target at flag's position and attack it
-    const hostileStructure: Structure = attackFlag.pos.lookFor(LOOK_STRUCTURES)[0];
+    let hostileStructure: Structure | null = attackFlag.pos.lookFor(LOOK_STRUCTURES)[0];
 
     if (hostileStructure) {
       switch (this.attack(hostileStructure)) {
@@ -34,6 +34,30 @@ export class Attacker extends Creep {
       return;
     }
 
-    // TODO: Find hostile creeps or other structures and attack them
+    const hostileCreep: Creep | null = this.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+    if (hostileCreep) {
+      switch (this.attack(hostileCreep)) {
+        case OK:
+          break;
+        case ERR_NOT_IN_RANGE:
+          this.moveTo(hostileCreep.pos);
+          break;
+      }
+
+      return;
+    }
+
+    hostileStructure = this.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES);
+
+    if (hostileStructure) {
+      switch (this.attack(hostileStructure)) {
+        case OK:
+          break;
+        case ERR_NOT_IN_RANGE:
+          this.moveTo(hostileStructure.pos);
+          break;
+      }
+    }
   }
 }

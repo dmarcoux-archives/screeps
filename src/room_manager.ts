@@ -145,7 +145,7 @@ export class RoomManager {
     const attackFlag: Flag = Game.flags.Attack;
     if (attackFlag) {
       const numberOfAttackers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Attacker).length;
-      if (numberOfAttackers < 0 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Attacker) === -1) {
+      if (numberOfAttackers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Attacker) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Attacker, memory: {} });
       }
     }
