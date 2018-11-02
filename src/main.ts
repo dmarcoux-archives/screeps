@@ -29,6 +29,17 @@ export const loop = ErrorMapper.wrapLoop(() => {
     delete Memory.creeps[creepName];
   }
 
+  // Initialize memory of flags
+  for (const flagName in Game.flags) {
+    const flag: Flag = Game.flags[flagName];
+
+    if (flag.memory) {
+      continue;
+    }
+
+    flag.memory = {};
+  }
+
   // Initialize Memory.rooms
   if (!(Memory.rooms)) {
     Memory.rooms = {};

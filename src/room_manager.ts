@@ -119,10 +119,9 @@ export class RoomManager {
     }
 
     // Spawn decoys if there is a decoy flag
-    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
-    // TODO: Check when a decoy flag is placed, then read data from it to know how many decoys to spawn and where to send them
-    const decoyFlag: Flag = Game.flags.Decoy;
-    if (decoyFlag) {
+    // TODO: Check memory to know how many decoys to spawn and where to send them
+    const decoyFlag: Flag | undefined = Game.flags.Decoy;
+    if (decoyFlag && decoyFlag.memory.assignedRoom === this.room.name) {
       const numberOfDecoys: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Decoy).length;
       if (numberOfDecoys < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Decoy) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Decoy, memory: {} });
@@ -130,9 +129,9 @@ export class RoomManager {
     }
 
     // Spawn claimers if there is a claim flag
-    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
-    const claimFlag: Flag = Game.flags.Claim;
-    if (claimFlag) {
+    // TODO: Check memory to know how many claimers to spawn and where to send them
+    const claimFlag: Flag | undefined = Game.flags.Claim;
+    if (claimFlag && claimFlag.memory.assignedRoom === this.room.name) {
       const numberOfClaimers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Claimer).length;
       if (numberOfClaimers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Claimer) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Claimer, memory: {} });
@@ -140,10 +139,9 @@ export class RoomManager {
     }
 
     // Spawn attackers if there is an attack flag
-    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
-    // TODO: Check when an attack flag is placed, then read data from it to know how many attackers to spawn and where to send them
-    const attackFlag: Flag = Game.flags.Attack;
-    if (attackFlag) {
+    // TODO: Check memory to know how many attackers to spawn and where to send them
+    const attackFlag: Flag | undefined = Game.flags.Attack;
+    if (attackFlag && attackFlag.memory.assignedRoom === this.room.name) {
       const numberOfAttackers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Attacker).length;
       if (numberOfAttackers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Attacker) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Attacker, memory: {} });
@@ -151,10 +149,9 @@ export class RoomManager {
     }
 
     // Spawn defenders if there is an defend flag
-    // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
-    // TODO: Check when a defend flag is placed, then read data from it to know how many defenders to spawn and where to send them
-    const defendFlag: Flag = Game.flags.Defend;
-    if (defendFlag) {
+    // TODO: Check memory to know how many defenders to spawn and where to send them
+    const defendFlag: Flag | undefined = Game.flags.Defend;
+    if (defendFlag && defendFlag.memory.assignedRoom === this.room.name) {
       const numberOfDefenders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Defender).length;
       if (numberOfDefenders < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Defender) === -1) {
         this.room.memory.spawnQueue.push({ creepRole: CreepRole.Defender, memory: {} });

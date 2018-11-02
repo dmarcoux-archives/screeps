@@ -29,6 +29,10 @@ declare enum CreepRole {
   RemoteBuilder = 'RemoteBuilder'
 }
 
+interface FlagMemory {
+  assignedRoom?: string;
+}
+
 interface RoomMemorySource {
   id: string;
   containerPositionX: number;
