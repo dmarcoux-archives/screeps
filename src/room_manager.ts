@@ -150,7 +150,7 @@ export class RoomManager {
       }
     }
 
-    // Spawn attackers if there is an defend flag
+    // Spawn defenders if there is an defend flag
     // TODO: Check if the flag is assigned to the room (the flag's data should contain the room name)
     // TODO: Check when a defend flag is placed, then read data from it to know how many defenders to spawn and where to send them
     const defendFlag: Flag = Game.flags.Defend;
