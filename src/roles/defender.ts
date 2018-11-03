@@ -7,7 +7,7 @@ export class Defender extends Creep {
   }
 
   public work() {
-    const defendFlag: Flag = Game.flags.Defend;
+    const defendFlag: Flag | undefined = Game.flags.Defend;
 
     if (!defendFlag) {
       return;

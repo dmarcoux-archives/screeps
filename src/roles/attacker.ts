@@ -8,7 +8,7 @@ export class Attacker extends Creep {
 
   // TODO: Do not depend on the presence of the attackFlag to attack hostile structures/creeps in the room where this creep is
   public work() {
-    const attackFlag: Flag = Game.flags.Attack;
+    const attackFlag: Flag | undefined = Game.flags.Attack;
 
     if (!attackFlag) {
       return;

@@ -7,7 +7,7 @@ export class Decoy extends Creep {
   }
 
   public work() {
-    const decoyFlag: Flag = Game.flags.Decoy;
+    const decoyFlag: Flag | undefined = Game.flags.Decoy;
     if (!decoyFlag) {
       return;
     }

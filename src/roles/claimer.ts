@@ -23,15 +23,25 @@ export class Claimer extends Creep {
     if (this.room.controller!.my) {
       this.room.createConstructionSite(claimFlag.pos, STRUCTURE_SPAWN);
 
-      // Place flag to call remote builders to build the spawn and other structures in this room
-      // TODO: Check for errors
-      this.room.createFlag(claimFlag.pos, 'RemoteBuild');
-      const remoteBuildFlag: Flag = Game.flags.RemoteBuild;
-      // These remote builders will come from the same room as the claimer
-      remoteBuildFlag.memory.assignedRoom = this.memory.room;
+      // Create flag to call remote builders to build the spawn and other structures in this room
+      switch (this.room.createFlag(claimFlag.pos, 'RemoteBuild')) {
+        case ERR_NAME_EXISTS:
+          logMessage(`There is a flag with the name 'RemoteBuild' already.`);
+          break;
+        case ERR_FULL:
+          logMessage(`I have too many flags. The maximum number of flags per player is 10000.`);
+          break;
+        case ERR_INVALID_ARGS:
+          logMessage(`The location or the color constant is incorrect.`);
+          break;
+        default:
+          const remoteBuildFlag: Flag = Game.flags.RemoteBuild;
+          // These remote builders will come from the same room as the claimer
+          remoteBuildFlag.memory.assignedRoom = this.memory.room;
 
-      claimFlag.remove();
-
+          claimFlag.remove();
+          break;
+      };
       return;
     }
 
