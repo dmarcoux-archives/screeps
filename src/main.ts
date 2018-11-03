@@ -29,7 +29,19 @@ export const loop = ErrorMapper.wrapLoop(() => {
     delete Memory.creeps[creepName];
   }
 
-  // Initialize memory of flags
+  // Delete memory of missing flags
+  for (const flagName in Memory.flags) {
+    console.log(flagName);
+    if (flagName in Game.flags) {
+      console.log(flagName);
+      // Flag is present, go to the next flag
+      continue;
+    }
+
+    delete Memory.flags[flagName];
+  }
+
+  // Initialize memory of flags. It's needed since I place flags with the UI, which doesn't initialize the memory
   for (const flagName in Game.flags) {
     const flag: Flag = Game.flags[flagName];
 
