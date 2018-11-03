@@ -54,6 +54,9 @@ export class Claimer extends Creep {
       case ERR_NOT_IN_RANGE:
         this.moveTo(this.room.controller!.pos);
         break;
+      case ERR_GCL_NOT_ENOUGH:
+        logMessage(`GCL is not enough to claim room ${this.room.name}`);
+        break;
     }
   }
 }
