@@ -9,12 +9,12 @@ export class Hauler extends Creep {
 
   public work() {
     if (this.memory.working) {
-      // TODO: Don't hardcode the spawn
-      const spawn: StructureSpawn = Game.spawns.Spawn1;
+      // TODO: Support multi-spawns
+      const spawn: StructureSpawn = Game.spawns[this.room.memory.spawnNames[0]];
       const storage: StructureStorage | undefined = Game.rooms[this.memory.room].storage;
 
       if (spawn.energy < spawn.energyCapacity || !storage) {
-        switch (this.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY)) {
+        switch (this.transfer(spawn, RESOURCE_ENERGY)) {
           // TODO: Is ERR_NOT_ENOUGH_RESOURCES needed?
           case OK:
           case ERR_NOT_ENOUGH_RESOURCES:
@@ -24,7 +24,7 @@ export class Hauler extends Creep {
             this.drop(RESOURCE_ENERGY);
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.moveTo(Game.spawns.Spawn1) === OK) {
+            if (this.moveTo(spawn) === OK) {
               logMessage(`${this.name} => Spawn`);
             }
             break;

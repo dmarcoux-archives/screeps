@@ -8,14 +8,16 @@ export class BasicHarvester extends Creep {
 
   public work() {
     if (this.memory.working) {
-      // TODO: Don't hardcode the spawn
-      switch(this.transfer(Game.spawns.Spawn1, RESOURCE_ENERGY)) {
+      // TODO: Support multi-spawns
+      const spawn: StructureSpawn = Game.spawns[this.room.memory.spawnNames[0]];
+
+      switch(this.transfer(spawn, RESOURCE_ENERGY)) {
         // Ignore ERR_FULL to try to transfer again next tick
         case ERR_NOT_ENOUGH_RESOURCES:
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(Game.spawns.Spawn1) === OK) {
+          if (this.moveTo(spawn) === OK) {
             logMessage(`${this.name} => Spawn`);
           }
           break;
