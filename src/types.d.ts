@@ -26,7 +26,8 @@ declare enum CreepRole {
   Decoy = 'Decoy',
   Claimer = 'Claimer',
   Defender = 'Defender',
-  RemoteBuilder = 'RemoteBuilder'
+  RemoteBuilder = 'RemoteBuilder',
+  Reserver = 'Reserver'
 }
 
 interface FlagMemory {

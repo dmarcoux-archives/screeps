@@ -30,7 +30,8 @@ export enum CreepRole {
   Decoy = 'Decoy',
   Claimer = 'Claimer',
   Defender = 'Defender',
-  RemoteBuilder = 'RemoteBuilder'
+  RemoteBuilder = 'RemoteBuilder',
+  Reserver = 'Reserver'
 }
 
 export const CreepSpawnPriority: CreepRole[] = [
@@ -45,7 +46,8 @@ export const CreepSpawnPriority: CreepRole[] = [
   CreepRole.Decoy,
   CreepRole.Claimer,
   CreepRole.Defender,
-  CreepRole.RemoteBuilder
+  CreepRole.RemoteBuilder,
+  CreepRole.Reserver
 ]
 
 // TODO: Adapt number of extra parts for haulers depending on the distance they need to cover
@@ -61,7 +63,8 @@ export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBod
   [CreepRole.Decoy,          { core: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], extra: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], maxExtra: 1 }],
   [CreepRole.Claimer,        { core: [MOVE, CLAIM], extra: [], maxExtra: 0 }],
   [CreepRole.Defender,       { core: [TOUGH, TOUGH, MOVE, MOVE, ATTACK], extra: [MOVE, ATTACK], maxExtra: 1 }],
-  [CreepRole.RemoteBuilder,  { core: [WORK, CARRY, MOVE, WORK, CARRY, MOVE], extra: [WORK, CARRY, MOVE], maxExtra: 1 }]
+  [CreepRole.RemoteBuilder,  { core: [WORK, CARRY, MOVE, WORK, CARRY, MOVE], extra: [WORK, CARRY, MOVE], maxExtra: 1 }],
+  [CreepRole.Reserver,       { core: [MOVE, CLAIM, CLAIM], extra: [], maxExtra: 0 }],
 ]);
 
 

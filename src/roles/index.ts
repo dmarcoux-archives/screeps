@@ -8,5 +8,6 @@ export { Harvester } from './harvester';
 export { Hauler } from './hauler';
 export { RemoteBuilder } from './remote_builder';
 export { Repairer } from './repairer';
+export { Reserver } from './reserver';
 export { Supplier } from './supplier';
 export { Upgrader } from './upgrader';

@@ -170,6 +170,16 @@ export class RoomManager {
       }
     }
 
+    // Spawn reservers if there is a reserve flag
+    // TODO: Check memory to know how many reservers to spawn and when to send them (depending on the reserve timer)
+    const reserveFlag: Flag | undefined = Game.flags.Reserve;
+    if (reserveFlag && reserveFlag.memory.assignedRoom === this.room.name) {
+      const numberOfReservers: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Reserver).length;
+      if (numberOfReservers < 1 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Reserver) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.Reserver, memory: {} });
+      }
+    }
+
     this.spawner.spawnCreeps();
   }
 
