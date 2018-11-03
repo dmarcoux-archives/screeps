@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the repairer role
 export class Repairer extends Creep {
   constructor(id: string) {
@@ -14,6 +12,7 @@ export class Repairer extends Creep {
         // TODO: This is a naive approach to prevent creeps from blocking others
         const idleFlag: Flag | undefined = Game.flags.Idle;
         if (idleFlag) {
+          // TODO: Log errors
           this.moveTo(idleFlag.pos);
         }
 
@@ -26,9 +25,8 @@ export class Repairer extends Creep {
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(damagedStructure.pos) === OK) {
-            logMessage(`${this.name} => Damaged Structure`);
-          }
+          // TODO: Log errors
+          this.moveTo(damagedStructure.pos);
           break;
       }
 
@@ -47,9 +45,8 @@ export class Repairer extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(storage.pos) === OK) {
-            logMessage(`${this.name} => Storage`);
-          }
+          // TODO: Log errors
+          this.moveTo(storage.pos);
           break;
       }
 
@@ -68,9 +65,8 @@ export class Repairer extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(energy.pos) === OK) {
-            logMessage(`${this.name} => Energy`);
-          }
+          // TODO: Log errors
+          this.moveTo(energy.pos);
           break;
       }
     }

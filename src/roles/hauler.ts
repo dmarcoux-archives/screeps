@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // TODO: Haulers can sometime block the harvester from getting to the container. They must never stand on the container
 // Creeps with the hauler role
 export class Hauler extends Creep {
@@ -24,9 +22,8 @@ export class Hauler extends Creep {
             this.drop(RESOURCE_ENERGY);
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.moveTo(spawn) === OK) {
-              logMessage(`${this.name} => Spawn`);
-            }
+            // TODO: Log errors
+            this.moveTo(spawn);
             break;
         }
 
@@ -43,9 +40,8 @@ export class Hauler extends Creep {
           this.drop(RESOURCE_ENERGY);
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(storage) === OK) {
-            logMessage(`${this.name} => Storage`);
-          }
+          // TODO: Log errors
+          this.moveTo(storage);
           break;
       };
 
@@ -68,9 +64,8 @@ export class Hauler extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(container.pos) === OK) {
-            logMessage(`${this.name} => Container`);
-          }
+          // TODO: Log errors
+          this.moveTo(container.pos);
           break;
       }
 
@@ -91,9 +86,8 @@ export class Hauler extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(energy.pos) === OK) {
-            logMessage(`${this.name} => Energy`);
-          }
+          // TODO: Log errors
+          this.moveTo(energy.pos);
           break;
       }
     }

@@ -1,5 +1,5 @@
 import { ConstructionAutomater } from 'construction_automater';
-import { BuildableStructurePriority, CreepRole, logMessage, sortByIndex } from 'globals';
+import { BuildableStructurePriority, CreepRole, sortByIndex } from 'globals';
 import { Spawner } from 'spawner';
 
 export class RoomManager {

@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the remote builder role
 // TODO: Switch to basic harvester or upgrade role once the spawn and containers are built
 //       For this, change memory.
@@ -20,6 +18,7 @@ export class RemoteBuilder extends Creep {
 
     // remoteBuildFlag.pos always work, no matter where the creep is (unlike remoteBuildFlag.room)
     if (this.room.name !== remoteBuildFlag.pos.roomName) {
+      // TODO: Log errors
       this.moveTo(remoteBuildFlag.pos);
       return;
     }
@@ -45,9 +44,8 @@ export class RemoteBuilder extends Creep {
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(constructionSite.pos) === OK) {
-            logMessage(`${this.name} => Construction Site`);
-          }
+          // TODO: Log errors
+          this.moveTo(constructionSite.pos);
           break;
       }
 
@@ -58,9 +56,8 @@ export class RemoteBuilder extends Creep {
 
     switch (this.harvest(source)) {
       case ERR_NOT_IN_RANGE:
-        if (this.moveTo(source.pos) === OK) {
-          logMessage(`${this.name} => Source`);
-        }
+        // TODO: Log errors
+        this.moveTo(source.pos);
         break;
     }
 

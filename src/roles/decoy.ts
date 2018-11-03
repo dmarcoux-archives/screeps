@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the decoy role
 export class Decoy extends Creep {
   constructor(id: string) {
@@ -12,6 +10,7 @@ export class Decoy extends Creep {
       return;
     }
 
+    // TODO: Log errors
     this.moveTo(decoyFlag.pos);
   }
 }

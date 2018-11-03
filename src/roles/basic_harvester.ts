@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the basic harvester role
 export class BasicHarvester extends Creep {
   constructor(id: string) {
@@ -17,9 +15,8 @@ export class BasicHarvester extends Creep {
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(spawn) === OK) {
-            logMessage(`${this.name} => Spawn`);
-          }
+          // TODO: Log errors
+          this.moveTo(spawn);
           break;
       }
 
@@ -30,9 +27,8 @@ export class BasicHarvester extends Creep {
 
     switch (this.harvest(source)) {
       case ERR_NOT_IN_RANGE:
-        if (this.moveTo(source.pos) === OK) {
-          logMessage(`${this.name} => Source`);
-        }
+        // TODO: Log errors
+        this.moveTo(source.pos);
         break;
     }
 

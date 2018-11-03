@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the upgrader role
 export class Upgrader extends Creep {
   constructor(id: string) {
@@ -15,9 +13,8 @@ export class Upgrader extends Creep {
             this.memory.working = false;
             break;
           case ERR_NOT_IN_RANGE:
-            if (this.moveTo(this.room.controller.pos) === OK) {
-              logMessage(`${this.name} => Controller`);
-            }
+            // TODO: Log errors
+            this.moveTo(this.room.controller.pos);
             break;
         }
       }
@@ -37,9 +34,8 @@ export class Upgrader extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(storage.pos) === OK) {
-            logMessage(`${this.name} => Storage`);
-          }
+          // TODO: Log errors
+          this.moveTo(storage.pos);
           break;
       }
 
@@ -58,9 +54,8 @@ export class Upgrader extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(energy.pos) === OK) {
-            logMessage(`${this.name} => Energy`);
-          }
+          // TODO: Log errors
+          this.moveTo(energy.pos);
           break;
       }
     }

@@ -15,6 +15,7 @@ export class Claimer extends Creep {
 
     // claimFlag.pos always work, no matter where the creep is (unlike claimFlag.room)
     if (this.room.name !== claimFlag.pos.roomName) {
+      // TODO: Log errors
       this.moveTo(claimFlag.pos);
       return;
     }

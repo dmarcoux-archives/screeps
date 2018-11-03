@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the supplier role
 export class Supplier extends Creep {
   constructor(id: string) {
@@ -14,6 +12,7 @@ export class Supplier extends Creep {
         // TODO: This is a naive approach to prevent creeps from blocking others
         const idleFlag: Flag | undefined = Game.flags.Idle;
         if (idleFlag) {
+          // TODO: Log errors
           this.moveTo(idleFlag.pos);
         }
 
@@ -27,10 +26,8 @@ export class Supplier extends Creep {
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(suppliedStructure.pos) === OK) {
-            // TODO: Bit more accurate here
-            logMessage(`${this.name} => ${suppliedStructure.structureType}`);
-          }
+          // TODO: Log errors
+          this.moveTo(suppliedStructure.pos);
           break;
       }
 
@@ -49,9 +46,8 @@ export class Supplier extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(storage.pos) === OK) {
-            logMessage(`${this.name} => Storage`);
-          }
+          // TODO: Log errors
+          this.moveTo(storage.pos);
           break;
       }
 
@@ -72,9 +68,8 @@ export class Supplier extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(energy.pos) === OK) {
-            logMessage(`${this.name} => Energy`);
-          }
+          // TODO: Log errors
+          this.moveTo(energy.pos);
           break;
       }
     }

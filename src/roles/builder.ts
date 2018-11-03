@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the builder role
 export class Builder extends Creep {
   constructor(id: string) {
@@ -15,6 +13,7 @@ export class Builder extends Creep {
         // TODO: This is a naive approach to prevent creeps from blocking others
         const idleFlag: Flag | undefined = Game.flags.Idle;
         if (idleFlag) {
+          // TODO: Log errors
           this.moveTo(idleFlag.pos);
         }
 
@@ -36,9 +35,8 @@ export class Builder extends Creep {
           this.memory.working = false;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(constructionSite.pos) === OK) {
-            logMessage(`${this.name} => Construction Site`);
-          }
+          // TODO: Log errors
+          this.moveTo(constructionSite.pos);
           break;
       }
 
@@ -57,9 +55,8 @@ export class Builder extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(storage.pos) === OK) {
-            logMessage(`${this.name} => Storage`);
-          }
+          // TODO: Log errors
+          this.moveTo(storage.pos);
           break;
       }
 
@@ -78,9 +75,8 @@ export class Builder extends Creep {
           this.memory.working = true;
           break;
         case ERR_NOT_IN_RANGE:
-          if (this.moveTo(energy.pos) === OK) {
-            logMessage(`${this.name} => Energy`);
-          }
+          // TODO: Log errors
+          this.moveTo(energy.pos);
           break;
       }
     }

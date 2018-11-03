@@ -1,5 +1,3 @@
-import { logMessage } from 'globals';
-
 // Creeps with the attacker role
 export class Attacker extends Creep {
   constructor(id: string) {
@@ -16,6 +14,7 @@ export class Attacker extends Creep {
 
     // attackFlag.pos always work, no matter where the creep is (unlike attackFlag.room)
     if (this.room.name !== attackFlag.pos.roomName) {
+      // TODO: Log errors
       this.moveTo(attackFlag.pos);
       return;
     }
@@ -27,6 +26,7 @@ export class Attacker extends Creep {
         case OK:
           break;
         case ERR_NOT_IN_RANGE:
+          // TODO: Log errors
           this.moveTo(hostileStructure.pos);
           break;
       }
@@ -41,6 +41,7 @@ export class Attacker extends Creep {
         case OK:
           break;
         case ERR_NOT_IN_RANGE:
+          // TODO: Log errors
           this.moveTo(hostileCreep.pos);
           break;
       }
@@ -55,6 +56,7 @@ export class Attacker extends Creep {
         case OK:
           break;
         case ERR_NOT_IN_RANGE:
+          // TODO: Log errors
           this.moveTo(hostileStructure.pos);
           break;
       }
