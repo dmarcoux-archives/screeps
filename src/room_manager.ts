@@ -1,5 +1,5 @@
 import { ConstructionAutomater } from 'construction_automater';
-import { CreepRole, logMessage } from 'globals';
+import { BuildableStructurePriority, CreepRole, logMessage, sortByIndex } from 'globals';
 import { Spawner } from 'spawner';
 
 export class RoomManager {
@@ -34,9 +34,11 @@ export class RoomManager {
   }
 
   public setup() {
-    // TODO: Update every X ticks?
+    // TODO: Update every X ticks (with a timeout)? With `.sort`, it can be quite expensive to do so
     // The id of a construction site is available one tick after it was placed. This is why this is updated every tick.
-    this.room.memory.constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES).map((constructionSite) => constructionSite.id);
+    this.room.memory.constructionSiteIds = this.room.find(FIND_MY_CONSTRUCTION_SITES)
+                                                    .sort((a, b) => sortByIndex(BuildableStructurePriority, a.structureType, b.structureType))
+                                                    .map((constructionSite) => constructionSite.id);
     // Update the list of damaged/supplied structures and towers
     this.room.memory.damagedStructureIds = this.room.find(FIND_STRUCTURES, { filter: (structure) => structure.hits < structure.hitsMax && structure.structureType !== STRUCTURE_WALL }).map((structure) => structure.id);
     this.room.memory.suppliedStructureIds = this.room.find(FIND_MY_STRUCTURES, { filter: (structure) => (structure.structureType === STRUCTURE_TOWER || structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity }).map((structure) => structure.id);

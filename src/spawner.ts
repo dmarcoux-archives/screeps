@@ -1,4 +1,4 @@
-import { BodyPartSpawnOrder, CreepRole, CreepSpawnPriority, logMessage, RoleBodies } from 'globals';
+import { BodyPartSpawnOrder, CreepRole, CreepSpawnPriority, logMessage, RoleBodies, sortByIndex } from 'globals';
 
 // Spawn creeps
 export class Spawner {
@@ -13,7 +13,7 @@ export class Spawner {
   // TODO: Spawn creep on demand just in time for a creep which will die (check creep.ticksToLive)
   public spawnCreeps() {
     // Sort the spawn queue based on the spawn priority
-    const spawnQueue: RoomMemorySpawnQueue[] = this.room.memory.spawnQueue.sort((a, b) => CreepSpawnPriority.indexOf(a.creepRole) - CreepSpawnPriority.indexOf(b.creepRole));
+    const spawnQueue: RoomMemorySpawnQueue[] = this.room.memory.spawnQueue.sort((a, b) => sortByIndex(CreepSpawnPriority, a.creepRole, b.creepRole));
 
     if (spawnQueue.length === 0) {
       return
@@ -94,7 +94,7 @@ export class Spawner {
     }
 
     // When a creep is hit, it loses body parts based on their order when it was spawned, so it's important to order them
-    creepBody = creepBody.sort((a, b) => BodyPartSpawnOrder.indexOf(a) - BodyPartSpawnOrder.indexOf(b))
+    creepBody = creepBody.sort((a, b) => sortByIndex(BodyPartSpawnOrder, a, b));
     return creepBody;
   }
 }
