@@ -72,6 +72,12 @@ export const loop = ErrorMapper.wrapLoop(() => {
   // Make creeps work
   for (const creepName in Game.creeps) {
     const creep: Creep = Game.creeps[creepName];
+
+    if (creep.spawning) {
+      // The creep is spawning, go to the next creep
+      continue;
+    }
+
     let creepWithRole;
 
     // TODO: Improve this
