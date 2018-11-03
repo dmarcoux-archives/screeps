@@ -1,6 +1,10 @@
 import { logMessage } from 'globals';
 
 // Creeps with the remote builder role
+// TODO: Switch to basic harvester or upgrade role once the spawn and containers are built
+//       For this, change memory.
+//         - basic harvester: set room to current room, switch role and set sourceId
+//         - upgrader: set room to current room, switch role
 export class RemoteBuilder extends Creep {
   constructor(id: string) {
     super(id);
