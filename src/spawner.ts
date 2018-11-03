@@ -71,7 +71,7 @@ export class Spawner {
   private createCreepBody(body: CreepBody): BodyPartConstant[] {
     let creepBody: BodyPartConstant[] = body.core;
 
-    if (this.creepBodyCost(creepBody) >= this.room.energyAvailable) {
+    if (this.creepBodyCost(creepBody) > this.room.energyAvailable) {
       // The creep body costs more than the available energy, return an empty array as it's not spawnable
       return [];
     }
