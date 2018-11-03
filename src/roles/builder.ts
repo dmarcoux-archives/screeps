@@ -23,6 +23,7 @@ export class Builder extends Creep {
 
       const constructionSite: ConstructionSite | null = Game.getObjectById<ConstructionSite>(constructionSiteIds[0]);
 
+      // TODO: This should be a while so if it's null, then loop until one constructionSite is valid or until the end of the array
       if (constructionSite === null) {
         // Remove the construction site id from the memory
         Memory.rooms[this.memory.room].constructionSiteIds.splice(0, 1);
