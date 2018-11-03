@@ -87,7 +87,7 @@ export class RoomManager {
     }
 
     const numberOfUpgraders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.Upgrader).length;
-    if (numberOfUpgraders < 5 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
+    if (numberOfUpgraders < 3 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.Upgrader) === -1) {
       this.room.memory.spawnQueue.push({ creepRole: CreepRole.Upgrader, memory: {} });
     }
 
