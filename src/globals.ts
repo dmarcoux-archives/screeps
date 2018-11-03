@@ -53,7 +53,7 @@ export const RoleBodies: Map<CreepRole, CreepBody> = new Map<CreepRole, CreepBod
   [CreepRole.Decoy,          { core: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], extra: [TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE], maxExtra: 1 }],
   [CreepRole.Claimer,        { core: [MOVE, CLAIM], extra: [], maxExtra: 0 }],
   [CreepRole.Defender,       { core: [TOUGH, TOUGH, MOVE, MOVE, ATTACK], extra: [MOVE, ATTACK], maxExtra: 1 }],
-  [CreepRole.RemoteBuilder,  { core: [], extra: [], maxExtra: 0 }]
+  [CreepRole.RemoteBuilder,  { core: [WORK, CARRY, MOVE, WORK, CARRY, MOVE], extra: [], maxExtra: 0 }]
 ]);
 
 // Prefix message with Game.time

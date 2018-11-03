@@ -158,6 +158,16 @@ export class RoomManager {
       }
     }
 
+    // Spawn remote builders if there is a remote build flag
+    // TODO: Use flag memory to know how many remote builders to spawn
+    const remoteBuildFlag: Flag | undefined = Game.flags.RemoteBuild;
+    if (remoteBuildFlag && remoteBuildFlag.memory.assignedRoom === this.room.name) {
+      const numberOfRemoteBuilders: number = _.filter(Memory.creeps, (memory) => memory.room === this.room.name && memory.role === CreepRole.RemoteBuilder).length;
+      if (numberOfRemoteBuilders < 4 && this.room.memory.spawnQueue.findIndex((o) => o.creepRole === CreepRole.RemoteBuilder) === -1) {
+        this.room.memory.spawnQueue.push({ creepRole: CreepRole.RemoteBuilder, memory: {} });
+      }
+    }
+
     this.spawner.spawnCreeps();
   }
 

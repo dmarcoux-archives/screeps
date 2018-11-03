@@ -7,7 +7,7 @@ export class Claimer extends Creep {
   }
 
   public work() {
-    const claimFlag: Flag = Game.flags.Claim;
+    const claimFlag: Flag | undefined = Game.flags.Claim;
 
     if (!claimFlag) {
       return;
@@ -19,20 +19,31 @@ export class Claimer extends Creep {
       return;
     }
 
+    // A construction site for a spawn is created once the controller belongs to me. It's not possible to do it on the same tick that the controller is claimed.
+    if (this.room.controller!.my) {
+      this.room.createConstructionSite(claimFlag.pos, STRUCTURE_SPAWN);
+
+      // Place flag to call remote builders to build the spawn and other structures in this room
+      // TODO: Check for errors
+      this.room.createFlag(claimFlag.pos, 'RemoteBuild');
+      const remoteBuildFlag: Flag = Game.flags.RemoteBuild;
+      // These remote builders will come from the same room as the claimer
+      remoteBuildFlag.memory.assignedRoom = this.memory.room;
+
+      claimFlag.remove();
+
+      return;
+    }
+
     // TODO: Handle other return values?
     switch (this.claimController(this.room.controller!)) {
       case OK:
-        // TODO: Destroy all hostile structures before creating construction site for spawn (otherwise it will fail if there's already an enemy spawn)
+        // Destroy all hostile structures before creating construction site for spawn (otherwise it will fail if there's already an enemy spawn)
         const hostileStructures: Structure[] = this.room.find<Structure>(FIND_HOSTILE_STRUCTURES);
         for (const hostileStructure of hostileStructures) {
           // TODO: This doesn't handle ERR_BUSY (Hostile creeps are in the room)
           hostileStructure.destroy();
         }
-
-        this.room.createConstructionSite(claimFlag.pos, STRUCTURE_SPAWN);
-        // TODO: Place flag to call squad of miners and builders to build the spawn and other structures in this room
-        claimFlag.remove();
-
         break;
       case ERR_INVALID_TARGET:
         // The controller is claimed/reserved by another player, so attack it!!!
