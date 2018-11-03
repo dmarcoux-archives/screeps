@@ -56,11 +56,14 @@ export class Claimer extends Creep {
         }
         break;
       case ERR_INVALID_TARGET:
+        // TODO: Check if controller is claimed or only reserved. If only reserved, it can be attacked more
         // The controller is claimed/reserved by another player, so attack it!!!
-        if (this.attackController(this.room.controller!) === OK) {
+        // if (this.attackController(this.room.controller!) === OK) {
+          // TODO: And set next possible tick to attack in flag's memory, so a creep can be spawn when needed
           // An owned controller cannot be attacked again for the next 1000 ticks and a creep with claim body parts only lives 600 ticks, so suicide to save CPU
-          this.suicide();
-        };
+          // this.suicide();
+        // };
+        break;
       case ERR_NOT_IN_RANGE:
         this.moveTo(this.room.controller!.pos);
         break;
