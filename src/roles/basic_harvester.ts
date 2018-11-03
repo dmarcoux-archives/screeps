@@ -24,11 +24,6 @@ export class BasicHarvester extends Creep {
       return;
     }
 
-    if (this.carry.energy === this.carryCapacity) {
-      this.memory.working = true;
-      return;
-    }
-
     const source: Source = Game.getObjectById<Source>(this.memory.sourceId)!;
 
     switch (this.harvest(source)) {
@@ -37,6 +32,11 @@ export class BasicHarvester extends Creep {
           logMessage(`${this.name} => Source`);
         }
         break;
+    }
+
+    if (this.carry.energy === this.carryCapacity) {
+      this.memory.working = true;
+      return;
     }
   }
 }
