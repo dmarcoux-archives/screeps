@@ -31,9 +31,7 @@ export const loop = ErrorMapper.wrapLoop(() => {
 
   // Delete memory of missing flags
   for (const flagName in Memory.flags) {
-    console.log(flagName);
     if (flagName in Game.flags) {
-      console.log(flagName);
       // Flag is present, go to the next flag
       continue;
     }
