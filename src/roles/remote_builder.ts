@@ -7,7 +7,6 @@ export class RemoteBuilder extends Creep {
   }
 
   public work() {
-    // TODO: Code this
     // Move to room with the remoteBuild flag
     const remoteBuildFlag: Flag | undefined = Game.flags.RemoteBuild;
 
