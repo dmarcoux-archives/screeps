@@ -44,7 +44,8 @@ export class Builder extends Creep {
     }
 
     const storage: StructureStorage | undefined = Game.rooms[this.memory.room].storage;
-    if (storage) {
+    // Only go to the storage if it has at least as much energy as the creep can carry
+    if (storage && storage.store.energy >= this.carryCapacity) {
       switch (this.withdraw(storage, RESOURCE_ENERGY)) {
         case OK:
           if (this.carry.energy === this.carryCapacity) {
