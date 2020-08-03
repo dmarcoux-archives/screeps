@@ -1,4 +1,4 @@
-# [dmarcoux/screeps](https://bitbucket.org/dmarcoux/screeps/)
+# [dmarcoux-archives/screeps](https://github.com/dmarcoux-archives/screeps/)
 
 "AI" for [Screeps](https://screeps.com/) in
 [TypeScript](https://www.typescriptlang.org/).
